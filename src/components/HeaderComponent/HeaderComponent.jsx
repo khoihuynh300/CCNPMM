@@ -12,6 +12,8 @@ import {
   WrapperHeaderAccount,
 } from "./style";
 
+import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
+
 const { Search } = Input;
 
 const HeaderComponent = () => {
@@ -22,12 +24,21 @@ const HeaderComponent = () => {
           <WrapperTextHeader>ECOMMERCE</WrapperTextHeader>
         </Col>
         <Col span={12}>
-          <Search
+          {/* <Search
             placeholder="input search text"
             allowClear
             enterButton="Search"
             size="large"
             // onSearch={onSearch}
+          /> */}
+          <ButtonInputSearch
+            size="large"
+            placeholder="Search"
+            textButton="Tìm kiếm"
+            bordered={false}
+            // backgroundColorInput="#fff"
+            // backgroundColorButton="#fff"
+            // colorButton="#333"
           />
         </Col>
         <Col span={6} style={{ display: "flex", gap: "30px" }}>
