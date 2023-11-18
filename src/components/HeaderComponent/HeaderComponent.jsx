@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Input } from "antd";
+import { Badge, Col } from "antd";
 import {
   UserOutlined,
   CaretDownOutlined,
@@ -14,8 +14,6 @@ import {
 
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 
-const { Search } = Input;
-
 const HeaderComponent = () => {
   return (
     <div>
@@ -24,13 +22,6 @@ const HeaderComponent = () => {
           <WrapperTextHeader>ECOMMERCE</WrapperTextHeader>
         </Col>
         <Col span={12}>
-          {/* <Search
-            placeholder="input search text"
-            allowClear
-            enterButton="Search"
-            size="large"
-            // onSearch={onSearch}
-          /> */}
           <ButtonInputSearch
             size="large"
             placeholder="Search"
@@ -53,7 +44,11 @@ const HeaderComponent = () => {
             </div>
           </WrapperHeaderAccount>
           <WrapperHeaderAccount>
-            <ShoppingCartOutlined style={{ fontSize: "30px" }} />
+            <Badge count={4} size="small">
+              <ShoppingCartOutlined
+                style={{ fontSize: "30px", color: "#fff" }}
+              />
+            </Badge>
             <span>Giỏ hàng</span>
           </WrapperHeaderAccount>
         </Col>

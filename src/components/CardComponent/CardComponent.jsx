@@ -21,7 +21,6 @@ const CardComponent = () => {
         />
       }
     >
-      {/* <Meta title="Europe Street beat" description="www.instagram.com" /> */}
       <StyleNameProduct>Iphone</StyleNameProduct>
       <WrapperReportText>
         <span style={{ marginRight: "4px" }}>

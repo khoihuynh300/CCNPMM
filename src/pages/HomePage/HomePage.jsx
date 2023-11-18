@@ -1,7 +1,10 @@
 import React from "react";
+
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
-import { WrapperTypeProduct } from "./style";
+import { WrapperButtonHover, WrapperTypeProduct } from "./style";
 import CardComponent from "../../components/CardComponent/CardComponent";
+import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
+import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
 
 const HomePage = () => {
   const arr = ["TV", "Tu lanh", "Laptop"];
@@ -22,15 +25,44 @@ const HomePage = () => {
           height: "1000px",
         }}
       >
+        {/* <NavBarComponent /> */}
         <div
           style={{
             marginTop: "20px",
             display: "flex",
+            flexWrap: "wrap",
             // alignItems: "center",
-            gap: "20px",
+            gap: "10px",
           }}
         >
           <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <WrapperButtonHover
+            style={{
+              border: "1px solid rgb(11, 116, 229)",
+              color: "rgb(11, 116, 229)",
+              width: "240px",
+              height: "38px",
+              borderRadius: "4px",
+            }}
+          >
+            Xem thêm
+          </WrapperButtonHover>
         </div>
       </div>
     </>
