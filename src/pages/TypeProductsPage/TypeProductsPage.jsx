@@ -1,4 +1,4 @@
-import { Col, Row } from "antd";
+import { Col, Pagination, Row } from "antd";
 import React from "react";
 import NavBarComponent from "../../components/NavBarComponent/NavBarComponent";
 import CardComponent from "../../components/CardComponent/CardComponent";
@@ -39,6 +39,15 @@ const TypeProductsPage = () => {
             <CardComponent />
           </Col>
         </Row>
+        <div>
+          <Pagination
+            showQuickJumper
+            total={500}
+            showSizeChanger={false}
+            // onChange={onChange}
+            style={{ textAlign: "center", marginTop: "10px" }}
+          />
+        </div>
       </Col>
     </Row>
   );

@@ -23,11 +23,22 @@ const CardComponent = () => {
     >
       <StyleNameProduct>Iphone</StyleNameProduct>
       <WrapperReportText>
-        <span style={{ marginRight: "4px" }}>
+        <span>
           <span>4.69</span>
-          <StarFilled style={{ fontSize: "12px", color: "yellow" }} />
+          <StarFilled
+            style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
+          />
         </span>
-        <span>| Đã bán 1000+</span>
+        <span
+          style={{
+            marginLeft: "4px",
+            fontSize: "15px",
+            lineHeight: "24px",
+            color: "rgb(120, 120, 120)",
+          }}
+        >
+          | Đã bán 1000+
+        </span>
       </WrapperReportText>
       <WrapperPriceText>
         1.000.000đ <WrapperDiscountText>-5%</WrapperDiscountText>
