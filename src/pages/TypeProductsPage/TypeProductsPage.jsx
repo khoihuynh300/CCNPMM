@@ -16,29 +16,44 @@ const TypeProductsPage = () => {
         <NavBarComponent />
       </Col>
       <Col span={20}>
-        <Row gutter={[6, 6]}>
-          <Col span={4}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "10px",
+          }}
+        >
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+          <CardComponent />
+        </div>
+        {/* <Row gutter={[6, 6]}>
+          <Col span={5}>
+          <CardComponent />
+          </Col>
+          <Col span={5}>
             <CardComponent />
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <CardComponent />
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <CardComponent />
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <CardComponent />
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <CardComponent />
           </Col>
-          <Col span={4}>
+          <Col span={5}>
             <CardComponent />
           </Col>
-          <Col span={4}>
-            <CardComponent />
-          </Col>
-        </Row>
+        </Row> */}
         <div>
           <Pagination
             showQuickJumper
