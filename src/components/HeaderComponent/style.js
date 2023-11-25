@@ -16,4 +16,13 @@ export const WrapperHeaderAccount = styled.div`
   display: flex;
   align-items: center;
   color: #fff;
+  cursor: pointer;
+`;
+
+export const WrapperContentPopup = styled.p`
+  cursor: pointer;
+  &:hover {
+    background: rgb(26, 148, 255);
+    color: white;
+  }
 `;
