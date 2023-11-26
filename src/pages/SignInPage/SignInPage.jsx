@@ -27,7 +27,7 @@ const SignInPage = () => {
   const { data, error, isPending, isSuccess, isError } = mutation;
   useEffect(() => {
     if (isSuccess) {
-      if (data?.status !== "ERR") {
+      if (data?.status === "OK") {
         message.success("Success");
         localStorage.setItem("access_token", data?.access_token);
         if (data?.access_token) {
@@ -45,7 +45,7 @@ const SignInPage = () => {
 
   const handleGetDetailUser = async (id, access_token) => {
     const res = await userService.getDetailUser(id, access_token);
-    dispatch(updateUser({ ...res?.data, access_token }));
+    dispatch(updateUser({ ...res?.data }));
   };
 
   const handleNavigateSignUp = () => {

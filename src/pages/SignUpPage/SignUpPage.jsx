@@ -22,7 +22,7 @@ const SignUpPage = () => {
   const { data, error, isPending, isSuccess, isError } = mutation;
   useEffect(() => {
     if (isSuccess) {
-      if (data?.status !== "ERR") {
+      if (data?.status === "OK") {
         message.success("Success");
         handleNavigateSignIn();
       }

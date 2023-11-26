@@ -22,7 +22,7 @@ function App() {
 
   const handleGetDetailUser = async (id, access_token) => {
     const res = await userService.getDetailUser(id, access_token);
-    dispatch(updateUser({ ...res?.data, access_token }));
+    dispatch(updateUser({ ...res?.data }));
   };
 
   const handleDecoded = (access_token) => {

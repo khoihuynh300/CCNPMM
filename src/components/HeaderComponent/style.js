@@ -22,7 +22,6 @@ export const WrapperHeaderAccount = styled.div`
 export const WrapperContentPopup = styled.p`
   cursor: pointer;
   &:hover {
-    background: rgb(26, 148, 255);
-    color: white;
+    color: rgb(26, 148, 255);
   }
 `;

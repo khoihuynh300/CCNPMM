@@ -6,6 +6,7 @@ import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
+import ProfilePage from "../pages/ProfilePage/ProfilePage";
 
 const routes = [
   {
@@ -40,6 +41,11 @@ const routes = [
   {
     path: "/sign-up",
     component: SignUpPage,
+  },
+  {
+    path: "/profile",
+    component: ProfilePage,
+    showHeader: true,
   },
   {
     path: "*",
