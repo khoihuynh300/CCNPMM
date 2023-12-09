@@ -7,6 +7,7 @@ import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
 import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
+import AdminPage from "../pages/AdminPage/AdminPage";
 
 const routes = [
   {
@@ -15,7 +16,7 @@ const routes = [
     showHeader: true,
   },
   {
-    path: "/:type",
+    path: "/category/:type",
     component: TypeProductsPage,
     showHeader: true,
   },
@@ -46,6 +47,12 @@ const routes = [
     path: "/profile",
     component: ProfilePage,
     showHeader: true,
+  },
+  {
+    path: "/admin",
+    component: AdminPage,
+    showHeader: false,
+    isPrivate: true,
   },
   {
     path: "*",

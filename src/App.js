@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import routes from "./routes";
 import DefaultComponent from "./components/DefaultComponent/DefaultComponent";
@@ -9,6 +9,8 @@ import { updateUser } from "./redux/slices/userSlice";
 import * as userService from "./services/userService";
 function App() {
   const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
@@ -58,16 +60,19 @@ function App() {
           {routes.map((route) => {
             const Page = route.component;
             const Layout = route.showHeader ? DefaultComponent : Fragment;
+            const auth = !route.isPrivate || user.isAdmin;
             return (
-              <Route
-                key={route.path}
-                path={route.path}
-                element={
-                  <Layout>
-                    <Page />
-                  </Layout>
-                }
-              />
+              auth && (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={
+                    <Layout>
+                      <Page />
+                    </Layout>
+                  }
+                />
+              )
             );
           })}
         </Routes>

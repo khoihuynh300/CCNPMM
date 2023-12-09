@@ -9,25 +9,19 @@ import {
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
 
-const CardComponent = () => {
+const CardComponent = (props) => {
+  const { countInStock, discount, image, name, price, rating, type, selled } = props;
   return (
     <WrapperCardStyle
       hoverable
       bodyStyle={{ padding: "10px" }}
-      cover={
-        <img
-          alt="example"
-          src="https://salt.tikicdn.com/cache/750x750/ts/product/c2/95/b0/405e3bc7267cd545c76fd6eb93fa6045.png.webp"
-        />
-      }
+      cover={<img alt="img" src={image} />}
     >
-      <StyleNameProduct>Iphone</StyleNameProduct>
+      <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>
         <span>
-          <span>4.69</span>
-          <StarFilled
-            style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-          />
+          <span>{rating}</span>
+          <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
         </span>
         <span
           style={{
@@ -37,11 +31,11 @@ const CardComponent = () => {
             color: "rgb(120, 120, 120)",
           }}
         >
-          | Đã bán 1000+
+          | Đã bán {selled}
         </span>
       </WrapperReportText>
       <WrapperPriceText>
-        1.000.000đ <WrapperDiscountText>-5%</WrapperDiscountText>
+        {price}đ <WrapperDiscountText>-{discount}%</WrapperDiscountText>
       </WrapperPriceText>
     </WrapperCardStyle>
   );

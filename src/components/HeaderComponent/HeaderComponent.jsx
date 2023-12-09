@@ -14,7 +14,7 @@ import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { resetUser } from "../../redux/slices/userSlice";
 import * as userService from "../../services/userService";
 
-const HeaderComponent = () => {
+const HeaderComponent = ({isAdmin=false}) => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
   const navigate = useNavigate();
@@ -46,20 +46,20 @@ const HeaderComponent = () => {
 
   const content = (
     <div>
-      <WrapperContentPopup onClick={handleNavigateProfile}>
+      {!isAdmin && <WrapperContentPopup onClick={handleNavigateProfile}>
         Thông tin người dùng
-      </WrapperContentPopup>
+      </WrapperContentPopup>}
       <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
   );
 
   return (
-    <div>
+    <div style={{ overflow: "hidden", position:"fixed", top:0, left:0, right:0, zIndex:10 }}>
       <WrapperHeader gutter={16}>
         <Col span={6}>
           <WrapperTextHeader onClick={handleNavigateHome}>ECOMMERCE</WrapperTextHeader>
         </Col>
-        <Col span={12}>
+        <Col span={12} style={{ visibility:isAdmin && "hidden" }}>
           <ButtonInputSearch
             size="large"
             placeholder="Search"
@@ -70,7 +70,7 @@ const HeaderComponent = () => {
             // colorButton="#333"
           />
         </Col>
-        <Col span={6} style={{ display: "flex", gap: "30px" }}>
+        <Col span={6} style={{ display: "flex", gap: "30px", justifyContent:"flex-end" }}>
           <WrapperHeaderAccount>
             {userAvatar ? (
               <img
@@ -101,12 +101,12 @@ const HeaderComponent = () => {
               </div>
             )}
           </WrapperHeaderAccount>
-          <WrapperHeaderAccount>
+          {!isAdmin && <WrapperHeaderAccount>
             <Badge count={4} size="small">
               <ShoppingCartOutlined style={{ fontSize: "30px", color: "#fff" }} />
             </Badge>
             <span>Giỏ hàng</span>
-          </WrapperHeaderAccount>
+          </WrapperHeaderAccount>}
         </Col>
       </WrapperHeader>
     </div>
