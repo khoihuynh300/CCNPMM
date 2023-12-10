@@ -4,7 +4,7 @@ import React, { useState } from "react";
 const TableComponent = (props) => {
   const {
     selectionType = "checkbox",
-    data : dataSource = [],
+    data: dataSource = [],
     isLoading = false,
     columns = [],
     handleDeleteMany,
@@ -33,7 +33,7 @@ const TableComponent = (props) => {
           }}
           onClick={handleDeleteAll}
         >
-          Xóa tất cả
+          Xóa đã chọn
         </div>
       )}
       <Table

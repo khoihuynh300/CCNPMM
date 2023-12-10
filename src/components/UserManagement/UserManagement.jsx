@@ -42,6 +42,12 @@ const UserManagement = () => {
     return res;
   });
 
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    const res = userService.deleteManyUser(ids, token);
+    return res;
+  });
+
   const {
     data: dataUpdate,
     error: errorUpdate,
@@ -51,10 +57,16 @@ const UserManagement = () => {
   } = mutationUpdate;
   const {
     data: dataDeleted,
-    isLoading: isLoadingDeleted,
+    isPending: isLoadingDeleted,
     isSuccess: isSuccessDelected,
     isError: isErrorDeleted,
   } = mutationDeleted;
+  const {
+    data: dataDeletedMany,
+    isPending: isLoadingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeletedMany;
 
   const getAllUsers = async () => {
     const res = await userService.getAllUser();
@@ -75,7 +87,7 @@ const UserManagement = () => {
     }
   };
   const queryUsers = useQuery({ queryKey: ["users"], queryFn: getAllUsers });
-  const { isLoading: isLoadingUsers, data: users } = queryUsers;
+  const { isPending: isLoadingUsers, data: users } = queryUsers;
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
@@ -108,6 +120,14 @@ const UserManagement = () => {
       message.error("Lỗi");
     }
   }, [isSuccessDelected, isErrorDeleted]);
+
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany?.status === 'OK') {
+      message.success("Xóa thành công")
+    } else if (isErrorDeletedMany) {
+      message.error("Lỗi")
+    }
+  }, [isSuccessDeletedMany, isErrorDeletedMany])
 
   const renderAction = () => {
     return (
@@ -142,14 +162,15 @@ const UserManagement = () => {
       dataIndex: "isAdmin",
       filters: [
         {
-          text: "True",
-          value: true,
+          text: "TRUE",
+          value: "TRUE",
         },
         {
-          text: "False",
-          value: false,
+          text: "FALSE",
+          value: "FALSE",
         },
       ],
+      onFilter: (value, record) => record.isAdmin === value,
     },
     {
       title: "Phone",
@@ -214,6 +235,17 @@ const UserManagement = () => {
     );
   };
 
+  const handleDeleteManyUsers = (ids) => {
+    mutationDeletedMany.mutate(
+      { ids: ids, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryUsers.refetch();
+        },
+      }
+    );
+  };
+
   return (
     <div>
       <h2>Quản lý người dùng</h2>
@@ -221,8 +253,7 @@ const UserManagement = () => {
         <TableComponent
           data={dataTable}
           columns={columns}
-          handleDeleteMany={() => {}}
-          // handleDelteMany={handleDelteManyUsers}
+          handleDeleteMany={handleDeleteManyUsers}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {

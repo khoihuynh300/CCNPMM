@@ -61,6 +61,12 @@ const ProductManagement = () => {
     return res;
   });
 
+  const mutationDeletedMany = useMutationHooks((data) => {
+    const { token, ...ids } = data;
+    const res = productService.deleteManyProduct(ids, token);
+    return res;
+  });
+
   const { data, error, isPending, isSuccess, isError } = mutation;
   const {
     data: dataUpdate,
@@ -71,10 +77,16 @@ const ProductManagement = () => {
   } = mutationUpdate;
   const {
     data: dataDeleted,
-    isLoading: isLoadingDeleted,
+    isPending: isLoadingDeleted,
     isSuccess: isSuccessDelected,
     isError: isErrorDeleted,
   } = mutationDeleted;
+  const {
+    data: dataDeletedMany,
+    isPending: isLoadingDeletedMany,
+    isSuccess: isSuccessDeletedMany,
+    isError: isErrorDeletedMany,
+  } = mutationDeletedMany;
 
   const getAllProducts = async () => {
     const res = await productService.getAllProduct();
@@ -103,7 +115,7 @@ const ProductManagement = () => {
   };
   const queryProduct = useQuery({ queryKey: ["products"], queryFn: getAllProducts });
   const typeProduct = useQuery({ queryKey: ["type-product"], queryFn: getAllTypeProduct });
-  const { isLoading: isLoadingProducts, data: products } = queryProduct;
+  const { isPending: isLoadingProducts, data: products } = queryProduct;
 
   useEffect(() => {
     if (rowSelected && isOpenDrawer) {
@@ -150,6 +162,14 @@ const ProductManagement = () => {
       message.error("Lỗi");
     }
   }, [isSuccessDelected, isErrorDeleted]);
+
+  useEffect(() => {
+    if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
+      message.success("Xóa thành công");
+    } else if (isErrorDeletedMany) {
+      message.error("Lỗi");
+    }
+  }, [isSuccessDeletedMany, isErrorDeletedMany]);
 
   const renderAction = () => {
     return (
@@ -319,6 +339,17 @@ const ProductManagement = () => {
     );
   };
 
+  const handleDeleteManyProducts = (ids) => {
+    mutationDeletedMany.mutate(
+      { ids: ids, token: user?.access_token },
+      {
+        onSettled: () => {
+          queryProduct.refetch();
+        },
+      }
+    );
+  };
+
   return (
     <div>
       <h2>Quản lý sản phẩm</h2>
@@ -341,8 +372,7 @@ const ProductManagement = () => {
         <TableComponent
           data={dataTable}
           columns={columns}
-          handleDeleteMany={() => {}}
-          // handleDelteMany={handleDelteManyUsers}
+          handleDeleteMany={handleDeleteManyProducts}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
@@ -411,17 +441,10 @@ const ProductManagement = () => {
               name="countInStock"
             />
           </Form.Item>
-          <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, message: "Nhập giá" }]}
-          >
+          <Form.Item label="Price" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
             <InputComponent value={stateProduct.price} onChange={handleOnchange} name="price" />
           </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-          >
+          <Form.Item label="Description" name="description">
             <InputComponent
               value={stateProduct.description}
               onChange={handleOnchange}
@@ -538,21 +561,14 @@ const ProductManagement = () => {
               name="countInStock"
             />
           </Form.Item>
-          <Form.Item
-            label="Price"
-            name="price"
-            rules={[{ required: true, message: "Nhập giá" }]}
-          >
+          <Form.Item label="Price" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
             <InputComponent
               value={stateProductDetails.price}
               onChange={handleOnchangeDetails}
               name="price"
             />
           </Form.Item>
-          <Form.Item
-            label="Description"
-            name="description"
-          >
+          <Form.Item label="Description" name="description">
             <InputComponent
               value={stateProductDetails.description}
               onChange={handleOnchangeDetails}
