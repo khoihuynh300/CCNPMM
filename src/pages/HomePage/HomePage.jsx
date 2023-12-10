@@ -16,12 +16,11 @@ const HomePage = () => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["todos"],
+    queryKey: ["products"],
     queryFn: fetchProduct,
     retry: 3,
     retryDelay: 1000,
   });
-  console.log("data", products);
   return (
     <>
       <div style={{ padding: "0 120px" }}>
