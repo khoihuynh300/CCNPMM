@@ -9,21 +9,29 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const HomePage = () => {
   const [products, setProducts] = useState([]);
+  const [typeProduct, setTypeProduct] = useState([]);
 
   const searchProduct = useSelector((state) => state.product?.search);
 
   const navigate = useNavigate();
 
-  const arr = ["TV", "Tu lanh", "Laptop"];
   const fetchProduct = async (search) => {
     const res = await productService.getAllProduct(search);
     setProducts(res.data);
     return res;
   };
+  const fetchTypeProduct = async () => {
+    const res = await productService.getAllTypeProduct();
+    setTypeProduct(res?.data);
+  };
 
   useEffect(() => {
     fetchProduct(searchProduct);
   }, [searchProduct]);
+
+  useEffect(() => {
+    fetchTypeProduct();
+  }, []);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["products"],
@@ -38,9 +46,9 @@ const HomePage = () => {
 
   return (
     <>
-      <div style={{ padding: "0 120px" }}>
+      <div style={{ padding: "60px 120px 0" }}>
         <WrapperTypeProduct>
-          {arr.map((item) => {
+          {typeProduct.map((item) => {
             return <TypeProduct name={item} key={item} />;
           })}
         </WrapperTypeProduct>

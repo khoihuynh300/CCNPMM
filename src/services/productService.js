@@ -54,3 +54,10 @@ export const deleteManyProduct = async (data, access_token) => {
   });
   return res.data;
 };
+
+export const getProductType = async (type) => {
+  const res = await axios.get(
+    `${process.env.REACT_APP_API_URL}/product/get-all?filter=type&filter=${type}`
+  );
+  return res.data;
+};

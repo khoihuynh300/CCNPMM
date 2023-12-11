@@ -1,13 +1,47 @@
-import React from "react";
-import { WrapperLabelText, WrapperTextValue, WrapperContent } from "./style";
+import React, { useEffect, useState } from "react";
 import { Checkbox } from "antd";
 
+import { WrapperLabelText, WrapperTextValue, WrapperContent } from "./style";
+import * as productService from "../../services/productService";
+import { useNavigate } from "react-router-dom";
+
 const NavBarComponent = () => {
+  const [typeProduct, setTypeProduct] = useState([]);
+
+  const navigate = useNavigate();
+
+  const fetchTypeProduct = async () => {
+    const res = await productService.getAllTypeProduct();
+    setTypeProduct(res?.data);
+  };
+
+  useEffect(() => {
+    fetchTypeProduct();
+  }, []);
+
+  const handleNavigatetype = (type) => {
+    navigate(
+      `/category/${type
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        ?.replace(/ /g, "_")}`
+    );
+  };
+
   const renderContent = (type, options) => {
     switch (type) {
-      case "text":
+      case "category":
         return options.map((option, index) => {
-          return <WrapperTextValue key={index}>{option}</WrapperTextValue>;
+          return (
+            <WrapperTextValue
+              key={index}
+              onClick={() => {
+                handleNavigatetype(option);
+              }}
+            >
+              {option}
+            </WrapperTextValue>
+          );
         });
       case "checkbox":
         return (
@@ -46,10 +80,8 @@ const NavBarComponent = () => {
   };
   return (
     <div style={{ backgroundColor: "#fff" }}>
-      <WrapperLabelText>Label</WrapperLabelText>
-      <WrapperContent>
-        {renderContent("text", ["TV", "Tủ lạnh", "Laptop"])}
-      </WrapperContent>
+      <WrapperLabelText>Danh mục</WrapperLabelText>
+      <WrapperContent>{renderContent("category", typeProduct)}</WrapperContent>
       {/* <WrapperContent>
         {renderContent("checkbox", [
           { value: "a", label: "A" },

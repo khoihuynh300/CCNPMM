@@ -128,7 +128,7 @@ const ProductDetailComponent = ({ productId }) => {
                 padding: "10px 0",
               }}
             >
-              {productDetails?.price}đ
+              {productDetails?.price?.toLocaleString()}đ
             </div>
           </div>
           <div>

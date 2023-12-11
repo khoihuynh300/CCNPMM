@@ -112,7 +112,7 @@ const HeaderComponent = ({ isAdmin = false }) => {
             )}
           </WrapperHeaderAccount>
           {!isAdmin && (
-            <WrapperHeaderAccount>
+            <WrapperHeaderAccount onClick={()=>{navigate("/order")}}>
               <Badge count={4} size="small">
                 <ShoppingCartOutlined style={{ fontSize: "30px", color: "#fff" }} />
               </Badge>

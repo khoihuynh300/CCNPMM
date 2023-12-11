@@ -194,6 +194,7 @@ const ProductManagement = () => {
     {
       title: "Price",
       dataIndex: "price",
+      render: (text) => `${text.toLocaleString()}đ`,
       sorter: (a, b) => a.price - b.price,
     },
     {
