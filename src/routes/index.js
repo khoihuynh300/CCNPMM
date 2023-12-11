@@ -31,7 +31,7 @@ const routes = [
     showHeader: true,
   },
   {
-    path: "/product-detail",
+    path: "/product-detail/:id",
     component: ProductDetailPage,
     showHeader: true,
   },

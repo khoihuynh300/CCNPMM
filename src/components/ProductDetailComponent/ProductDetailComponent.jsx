@@ -1,21 +1,46 @@
 import { StarFilled, PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { Col, Image, InputNumber, Row } from "antd";
-import React from "react";
+import { Col, Image, Input, Row } from "antd";
+import React, { useState } from "react";
 
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
+import * as productService from "../../services/productService";
+import { useQuery } from "@tanstack/react-query";
 
-const ProductDetailComponent = () => {
+const ProductDetailComponent = ({ productId }) => {
+  const [numProduct, setNumProduct] = useState(1);
+
+  const onChange = (value) => {
+    const number = Number(value);
+    if (number && number > 0 && number < 1000) {
+      setNumProduct(number);
+    } else if (value === "") {
+      setNumProduct("");
+    }
+  };
+
+  const getDetailsProduct = async () => {
+    const res = await productService.getDetailsProduct(productId);
+    return res.data;
+  };
+
+  const { isPending, data: productDetails } = useQuery({
+    queryKey: ["product-detail"],
+    queryFn: getDetailsProduct,
+  });
+
+  const handleChangeCount = (type) => {
+    if (type === "increase") {
+      onChange(numProduct + 1);
+    } else {
+      onChange(numProduct - 1);
+    }
+  };
+
   return (
     <Row gutter={24}>
-      <Col
-        span={10}
-        style={{ padding: "12px", background: "#fff", borderRadius: "10px" }}
-      >
-        <Image
-          src="https://salt.tikicdn.com/cache/750x750/ts/product/c2/95/b0/405e3bc7267cd545c76fd6eb93fa6045.png.webp"
-          preview={false}
-        />
-        <Row>
+      <Col span={10} style={{ padding: "12px", background: "#fff", borderRadius: "10px" }}>
+        <Image src={productDetails?.image} preview={false} />
+        <Row style={{ visibility: "hidden" }}>
           <Col span={4}>
             <Image
               src="https://salt.tikicdn.com/cache/100x100/ts/product/f3/0e/72/b5aebf9321d23f9d28703ad58c631389.jpg.webp"
@@ -71,24 +96,14 @@ const ProductDetailComponent = () => {
               wordBreak: "break-word",
             }}
           >
-            Apple iPhone 13
+            {productDetails?.name}
           </span>
           <div>
-            <StarFilled
-              style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-            />
-            <StarFilled
-              style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-            />
-            <StarFilled
-              style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-            />
-            <StarFilled
-              style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-            />
-            <StarFilled
-              style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }}
-            />
+            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
+            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
+            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
+            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
+            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
 
             <span
               style={{
@@ -98,7 +113,7 @@ const ProductDetailComponent = () => {
                 color: "rgb(120, 120, 120)",
               }}
             >
-              | Đã bán 1000+
+              | Đã bán {productDetails?.selled}
             </span>
           </div>
           <div
@@ -110,10 +125,10 @@ const ProductDetailComponent = () => {
                 lineHeight: "40px",
                 marginRight: "8px",
                 fontWeight: 500,
-                padding: "10px",
+                padding: "10px 0",
               }}
             >
-              200.000đ
+              {productDetails?.price}đ
             </div>
           </div>
           <div>
@@ -164,19 +179,29 @@ const ProductDetailComponent = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  cursor: "pointer",
+                  userSelect: "none",
+                }}
+                onClick={() => {
+                  handleChangeCount("descrease");
                 }}
               >
                 <MinusOutlined style={{ fontSize: "16px" }} />
               </div>
-              <InputNumber
-                min={1}
-                defaultValue={1}
-                onChange={() => {}}
+              <Input
+                value={numProduct}
+                onChange={(e) => {
+                  onChange(e.target.value);
+                }}
+                onBlur={() => {
+                  if (numProduct === "") {
+                    setNumProduct(1);
+                  }
+                }}
                 style={{
-                  width: "40px",
+                  width: "50px",
                   textAlign: "center",
                 }}
-                controls={false}
               />
               <div
                 style={{
@@ -187,6 +212,11 @@ const ProductDetailComponent = () => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
+                  cursor: "pointer",
+                  userSelect: "none",
+                }}
+                onClick={() => {
+                  handleChangeCount("increase");
                 }}
               >
                 <PlusOutlined style={{ fontSize: "16px" }} />

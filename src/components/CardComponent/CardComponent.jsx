@@ -10,12 +10,23 @@ import {
 import { StarFilled } from "@ant-design/icons";
 
 const CardComponent = (props) => {
-  const { countInStock, discount, image, name, price, rating, type, selled } = props;
+  const {
+    countInStock,
+    discount,
+    image,
+    name,
+    price,
+    rating,
+    type,
+    selled,
+    onClick = () => {},
+  } = props;
   return (
     <WrapperCardStyle
       hoverable
       bodyStyle={{ padding: "10px" }}
       cover={<img alt="img" src={image} />}
+      onClick={onClick}
     >
       <StyleNameProduct>{name}</StyleNameProduct>
       <WrapperReportText>

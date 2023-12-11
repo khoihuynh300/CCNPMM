@@ -6,14 +6,18 @@ import CardComponent from "../../components/CardComponent/CardComponent";
 import * as productService from "../../services/productService";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const HomePage = () => {
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState([]);
 
   const searchProduct = useSelector((state) => state.product?.search);
+
+  const navigate = useNavigate();
+
   const arr = ["TV", "Tu lanh", "Laptop"];
   const fetchProduct = async (search) => {
     const res = await productService.getAllProduct(search);
-    setProducts(res.data)
+    setProducts(res.data);
     return res;
   };
 
@@ -21,16 +25,17 @@ const HomePage = () => {
     fetchProduct(searchProduct);
   }, [searchProduct]);
 
-  const {
-    data,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: fetchProduct,
     retry: 3,
     retryDelay: 1000,
   });
+
+  const handleNavigateProductDetail = (id) => {
+    navigate(`/product-detail/${id}`);
+  };
+
   return (
     <>
       <div style={{ padding: "0 120px" }}>
@@ -70,6 +75,9 @@ const HomePage = () => {
                 rating={product.rating}
                 type={product.type}
                 selled={product.selled}
+                onClick={() => {
+                  handleNavigateProductDetail(product._id);
+                }}
               />
             );
           })}
