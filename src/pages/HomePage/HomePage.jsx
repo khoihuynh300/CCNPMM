@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { WrapperButtonHover, WrapperTypeProduct } from "./style";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import * as productService from "../../services/productService";
 import { useQuery } from "@tanstack/react-query";
+import { useSelector } from "react-redux";
 const HomePage = () => {
+  const [products, setProducts] = useState([])
+
+  const searchProduct = useSelector((state) => state.product?.search);
   const arr = ["TV", "Tu lanh", "Laptop"];
-  const fetchProduct = async () => {
-    const res = await productService.getAllProduct();
+  const fetchProduct = async (search) => {
+    const res = await productService.getAllProduct(search);
+    setProducts(res.data)
     return res;
   };
+
+  useEffect(() => {
+    fetchProduct(searchProduct);
+  }, [searchProduct]);
+
   const {
-    data: products,
+    data,
     error,
     isLoading,
   } = useQuery({
@@ -48,7 +58,7 @@ const HomePage = () => {
             gap: "10px",
           }}
         >
-          {products?.data.map((product, id) => {
+          {products?.map((product, id) => {
             return (
               <CardComponent
                 key={id}
@@ -63,14 +73,6 @@ const HomePage = () => {
               />
             );
           })}
-          {/* <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent />
-          <CardComponent /> */}
         </div>
         <div
           style={{

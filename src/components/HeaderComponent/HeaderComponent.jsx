@@ -12,11 +12,13 @@ import {
 } from "./style";
 import ButtonInputSearch from "../ButtonInputSearch/ButtonInputSearch";
 import { resetUser } from "../../redux/slices/userSlice";
+import { searchProduct } from "../../redux/slices/productSlice";
 import * as userService from "../../services/userService";
 
-const HeaderComponent = ({isAdmin=false}) => {
+const HeaderComponent = ({ isAdmin = false }) => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
+  const [search, setSearch] = useState("")
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -44,33 +46,41 @@ const HeaderComponent = ({isAdmin=false}) => {
     navigate("/profile");
   };
 
+  const onSearch = (e) => {
+    setSearch(e.target.value)
+    dispatch(searchProduct(e.target.value));
+  };
+
   const content = (
     <div>
-      {!isAdmin && <WrapperContentPopup onClick={handleNavigateProfile}>
-        Thông tin người dùng
-      </WrapperContentPopup>}
+      {!isAdmin && (
+        <WrapperContentPopup onClick={handleNavigateProfile}>
+          Thông tin người dùng
+        </WrapperContentPopup>
+      )}
       <WrapperContentPopup onClick={handleLogout}>Đăng xuất</WrapperContentPopup>
     </div>
   );
 
   return (
-    <div style={{ overflow: "hidden", position:"fixed", top:0, left:0, right:0, zIndex:10 }}>
+    <div style={{ overflow: "hidden", position: "fixed", top: 0, left: 0, right: 0, zIndex: 10 }}>
       <WrapperHeader gutter={16}>
         <Col span={6}>
           <WrapperTextHeader onClick={handleNavigateHome}>ECOMMERCE</WrapperTextHeader>
         </Col>
-        <Col span={12} style={{ visibility:isAdmin && "hidden" }}>
+        <Col span={12} style={{ visibility: isAdmin && "hidden" }}>
           <ButtonInputSearch
             size="large"
             placeholder="Search"
             textButton="Tìm kiếm"
             bordered={false}
+            onChange={onSearch}
             // backgroundColorInput="#fff"
             // backgroundColorButton="#fff"
             // colorButton="#333"
           />
         </Col>
-        <Col span={6} style={{ display: "flex", gap: "30px", justifyContent:"flex-end" }}>
+        <Col span={6} style={{ display: "flex", gap: "30px", justifyContent: "flex-end" }}>
           <WrapperHeaderAccount>
             {userAvatar ? (
               <img
@@ -101,12 +111,14 @@ const HeaderComponent = ({isAdmin=false}) => {
               </div>
             )}
           </WrapperHeaderAccount>
-          {!isAdmin && <WrapperHeaderAccount>
-            <Badge count={4} size="small">
-              <ShoppingCartOutlined style={{ fontSize: "30px", color: "#fff" }} />
-            </Badge>
-            <span>Giỏ hàng</span>
-          </WrapperHeaderAccount>}
+          {!isAdmin && (
+            <WrapperHeaderAccount>
+              <Badge count={4} size="small">
+                <ShoppingCartOutlined style={{ fontSize: "30px", color: "#fff" }} />
+              </Badge>
+              <span>Giỏ hàng</span>
+            </WrapperHeaderAccount>
+          )}
         </Col>
       </WrapperHeader>
     </div>
