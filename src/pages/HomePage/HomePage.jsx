@@ -58,7 +58,7 @@ const HomePage = () => {
         style={{
           background: "#efefef",
           padding: "10px 120px",
-          height: "1000px",
+          // height: "1000px",
         }}
       >
         {/* <NavBarComponent /> */}
@@ -90,7 +90,7 @@ const HomePage = () => {
             );
           })}
         </div>
-        <div
+        {/* <div
           style={{
             display: "flex",
             justifyContent: "center",
@@ -104,11 +104,12 @@ const HomePage = () => {
               width: "240px",
               height: "38px",
               borderRadius: "4px",
+              
             }}
           >
             Xem thêm
           </WrapperButtonHover>
-        </div>
+        </div> */}
       </div>
     </>
   );

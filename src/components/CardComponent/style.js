@@ -3,6 +3,8 @@ import styled from "styled-components";
 
 export const WrapperCardStyle = styled(Card)`
   width: 200px;
+  overflow: hidden;
+  border: 0px;
   & img {
     height: 200px;
   }
@@ -29,8 +31,16 @@ export const WrapperPriceText = styled.div`
   font-weight: 500;
 `;
 
-export const WrapperDiscountText = styled.span`
-  color: rgb(255, 66, 78);
-  font-size: 12px;
+export const WrapperPriceOrigin = styled.span`
+  color: #9e9e9e;
+  font-size: 16px;
   font-weight: 500;
+  text-decoration: line-through;
+`;
+
+export const WrapperDiscountText = styled.span`
+  color: #212121;
+  font-size: 12px;
+  font-weight: 600;
+  margin-left: 10px;
 `;

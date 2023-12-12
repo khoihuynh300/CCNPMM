@@ -6,6 +6,7 @@ import {
   WrapperPriceText,
   WrapperDiscountText,
   WrapperCardStyle,
+  WrapperPriceOrigin,
 } from "./style";
 import { StarFilled } from "@ant-design/icons";
 
@@ -45,9 +46,18 @@ const CardComponent = (props) => {
           | Đã bán {selled}
         </span>
       </WrapperReportText>
-      <WrapperPriceText>
+      {discount !== 0 ? (
+        <>
+          <WrapperPriceOrigin>{price?.toLocaleString()} đ</WrapperPriceOrigin>
+          <WrapperDiscountText>-{discount}%</WrapperDiscountText>
+          <WrapperPriceText>{(price - price*discount/100).toLocaleString()} đ</WrapperPriceText>
+        </>
+      ) : (
+        <WrapperPriceText>{price?.toLocaleString()} đ</WrapperPriceText>
+      )}
+      {/* <WrapperPriceText>
         {price?.toLocaleString()}đ <WrapperDiscountText>-{discount}%</WrapperDiscountText>
-      </WrapperPriceText>
+      </WrapperPriceText> */}
     </WrapperCardStyle>
   );
 };

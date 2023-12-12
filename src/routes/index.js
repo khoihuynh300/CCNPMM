@@ -1,6 +1,5 @@
 import HomePage from "../pages/HomePage/HomePage";
 import OrderPage from "../pages/OrderPage/OrderPage";
-import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import TypeProductsPage from "../pages/TypeProductsPage/TypeProductsPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ProductDetailPage from "../pages/ProductDetailPage/ProductDetailPage";
@@ -8,6 +7,7 @@ import SignInPage from "../pages/SignInPage/SignInPage";
 import SignUpPage from "../pages/SignUpPage/SignUpPage";
 import ProfilePage from "../pages/ProfilePage/ProfilePage";
 import AdminPage from "../pages/AdminPage/AdminPage";
+import MyOrderPage from "../pages/MyOrderPage/MyOrderPage";
 
 const routes = [
   {
@@ -26,8 +26,8 @@ const routes = [
     showHeader: true,
   },
   {
-    path: "/products",
-    component: ProductsPage,
+    path: "/my-order",
+    component: MyOrderPage,
     showHeader: true,
   },
   {

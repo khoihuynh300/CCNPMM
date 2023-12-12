@@ -182,7 +182,7 @@ const ProductDetailComponent = ({ productId }) => {
                 textOverflow: "ellipsis",
               }}
             >
-              Thành phố Hồ Chí Minh
+              {user?.address}
             </span>
             <span
               style={{
@@ -190,6 +190,7 @@ const ProductDetailComponent = ({ productId }) => {
                 fontSize: "16px",
                 lineHeight: "24px",
                 fontWeight: 500,
+                cursor: "pointer"
               }}
             >
               {" "}
@@ -207,7 +208,6 @@ const ProductDetailComponent = ({ productId }) => {
                 marginTop: "10px",
               }}
             >
-              {/* <ButtonComponent icon={<PlusOutlined />}></ButtonComponent> */}
               <div
                 style={{
                   border: "1px solid #d9d9d9",

@@ -12,16 +12,19 @@ const ButtonInputSearch = (props) => {
     backgroundColorInput = "#fff",
     backgroundColorButton = "rgb(13, 92, 182)",
     colorButton = "#fff",
+    onKeyDown = ()=>{},
+    onClickButton = () => {},
     ...rests
   } = props;
 
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex", borderRadius:"5px", overflow:"hidden" }}>
       <InputComponent
         size={size}
         placeholder={placeholder}
         bordered={bordered}
         style={{ background: backgroundColorInput, borderRadius: "0" }}
+        onKeyDown={onKeyDown}
         {...rests}
       />
       <ButtonComponent
@@ -33,6 +36,7 @@ const ButtonInputSearch = (props) => {
           background: backgroundColorButton,
           color: colorButton,
         }}
+        onClick={onClickButton}
       >
         {textButton}
       </ButtonComponent>
