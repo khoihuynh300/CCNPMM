@@ -31,3 +31,12 @@ export const renderOptions = (arr) => {
   });
   return results;
 };
+
+export const convertPrice = (price) => {
+  try {
+      const result  = price?.toLocaleString()
+      return `${result} VND`
+  } catch (error) {
+      return null
+  }
+}

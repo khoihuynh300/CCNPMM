@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Image, message } from "antd";
 import { EyeFilled, EyeInvisibleFilled } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 
 import { WrapperContainerLeft, WrapperContainerRight, WrapperTextLight } from "./style";
@@ -18,6 +18,8 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowPassword, setIsShowPassword] = useState(false);
+
+  const location = useLocation()
 
   const dispatch = useDispatch();
 
@@ -36,7 +38,11 @@ const SignInPage = () => {
             handleGetDetailUser(decoded?.id, data?.access_token);
           }
         }
-        navigate("/");
+        if(location?.state) {
+          navigate(location?.state)
+        }else {
+          navigate('/')
+        }
       }
     } else if (isError) {
       message.error("Error");

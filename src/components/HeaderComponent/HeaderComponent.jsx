@@ -18,7 +18,7 @@ import * as userService from "../../services/userService";
 const HeaderComponent = ({ isAdmin = false }) => {
   const [username, setUsername] = useState("");
   const [userAvatar, setUserAvatar] = useState("");
-  const [search, setSearch] = useState("")
+  const order = useSelector((state) => state.order)
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -47,7 +47,6 @@ const HeaderComponent = ({ isAdmin = false }) => {
   };
 
   const onSearch = (e) => {
-    setSearch(e.target.value)
     dispatch(searchProduct(e.target.value));
   };
 
@@ -112,8 +111,8 @@ const HeaderComponent = ({ isAdmin = false }) => {
             )}
           </WrapperHeaderAccount>
           {!isAdmin && (
-            <WrapperHeaderAccount onClick={()=>{navigate("/order")}}>
-              <Badge count={4} size="small">
+            <WrapperHeaderAccount onClick={()=>{navigate("/cart")}}>
+              <Badge count={order?.orderItems?.length} size="small">
                 <ShoppingCartOutlined style={{ fontSize: "30px", color: "#fff" }} />
               </Badge>
               <span>Giỏ hàng</span>

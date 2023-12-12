@@ -5,9 +5,20 @@ import React, { useState } from "react";
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import * as productService from "../../services/productService";
 import { useQuery } from "@tanstack/react-query";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { addOrderProduct } from "../../redux/slices/orderSlice";
 
 const ProductDetailComponent = ({ productId }) => {
   const [numProduct, setNumProduct] = useState(1);
+
+  const user = useSelector((state) => state.user);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const dispatch = useDispatch();
 
   const onChange = (value) => {
     const number = Number(value);
@@ -33,6 +44,33 @@ const ProductDetailComponent = ({ productId }) => {
       onChange(numProduct + 1);
     } else {
       onChange(numProduct - 1);
+    }
+  };
+
+  const handleOrder = () => {
+    if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (!user?.id) {
+      navigate("/sign-in", { state: location?.pathname });
+    } else {
+      dispatch(
+        addOrderProduct({
+          orderItem: {
+            name: productDetails?.name,
+            amount: numProduct,
+            image: productDetails?.image,
+            price: productDetails?.price,
+            product: productDetails?._id,
+            discount: productDetails?.discount,
+            countInstock: productDetails?.countInStock,
+          },
+        })
+      );
     }
   };
 
@@ -234,6 +272,7 @@ const ProductDetailComponent = ({ productId }) => {
                 fontWeight: 500,
                 fontSize: "15px",
               }}
+              onClick={handleOrder}
             >
               Chọn mua
             </ButtonComponent>
@@ -247,6 +286,7 @@ const ProductDetailComponent = ({ productId }) => {
                 fontWeight: 500,
                 border: "1px solid rgb(13,92,182)",
               }}
+              onClick={handleAddToCart}
             >
               Thêm vào Giỏ
             </ButtonComponent>

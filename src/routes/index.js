@@ -21,7 +21,7 @@ const routes = [
     showHeader: true,
   },
   {
-    path: "/order",
+    path: "/cart",
     component: OrderPage,
     showHeader: true,
   },
