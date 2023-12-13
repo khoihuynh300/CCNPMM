@@ -46,7 +46,6 @@ const OrderManagement = () => {
   const dataTable =
     orders?.data?.length &&
     orders?.data?.map((order) => {
-      console.log(order)
       return {
         ...order,
         key: order._id,

@@ -20,8 +20,7 @@ const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
   const fetchMyOrder = async () => {
-    const res = await OrderService.getOrderByUserId(user?.id, user?.token);
-    console.log("data", res.data);
+    const res = await OrderService.getOrderByUserId(user?.id, user?.access_token);
     return res.data;
   };
 
@@ -40,7 +39,7 @@ const MyOrderPage = () => {
 
   const handleCancleOrder = (order) => {
     mutation.mutate(
-      { id: order._id, token: user?.token, orderItems: order?.orderItems, userId: user.id },
+      { id: order._id, token: user?.access_token, orderItems: order?.orderItems, userId: user.id },
       {
         onSuccess: () => {
           queryOrder.refetch();
@@ -67,7 +66,6 @@ const MyOrderPage = () => {
 
   const renderProduct = (data) => {
     return data?.map((order) => {
-      console.log("order", order);
       return (
         <WrapperHeaderItem key={order?._id}>
           <img

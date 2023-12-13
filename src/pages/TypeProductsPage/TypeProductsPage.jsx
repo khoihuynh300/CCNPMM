@@ -21,7 +21,6 @@ const TypeProductsPage = () => {
       setProducts(res.data);
     } else {
     }
-    console.log(res);
   };
   useEffect(() => {
     fetchProductOfType();
