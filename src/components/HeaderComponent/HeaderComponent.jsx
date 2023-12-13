@@ -122,13 +122,15 @@ const HeaderComponent = ({ isAdmin = false }) => {
               </WrapperHeaderAccount>
             </Popover>
           ) : (
-            <div onClick={handleNavigateSignIn}>
-              <span>Đăng nhập</span>
-              <div>
-                <span>Tài khoản</span>
-                <CaretDownOutlined />
+            <WrapperHeaderAccount>
+              <div onClick={handleNavigateSignIn}>
+                <span>Đăng nhập</span>
+                <div>
+                  <span>Tài khoản</span>
+                  <CaretDownOutlined />
+                </div>
               </div>
-            </div>
+            </WrapperHeaderAccount>
           )}
           {!isAdmin && (
             <WrapperHeaderAccount

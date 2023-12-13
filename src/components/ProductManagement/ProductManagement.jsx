@@ -45,7 +45,7 @@ const ProductManagement = () => {
       type,
       countInStock,
       discount,
-    });
+    }, user?.access_token);
     return res;
   });
 

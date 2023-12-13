@@ -69,7 +69,7 @@ const UserManagement = () => {
   } = mutationDeletedMany;
 
   const getAllUsers = async () => {
-    const res = await userService.getAllUser();
+    const res = await userService.getAllUser(user?.access_token);
     return res;
   };
 
@@ -176,11 +176,11 @@ const UserManagement = () => {
       title: "Phone",
       dataIndex: "phone",
     },
-    {
-      title: "Action",
-      dataIndex: "action",
-      render: renderAction,
-    },
+    // {
+    //   title: "Action",
+    //   dataIndex: "action",
+    //   render: renderAction,
+    // },
   ];
 
   const handleOnchangeAvatarDetails = async ({ fileList }) => {
