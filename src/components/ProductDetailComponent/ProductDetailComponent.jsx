@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
+import { convertPrice } from "../../utils";
 
 const ProductDetailComponent = ({ productId }) => {
   const [numProduct, setNumProduct] = useState(1);
@@ -77,8 +78,10 @@ const ProductDetailComponent = ({ productId }) => {
   return (
     <Row gutter={24}>
       <Col span={10} style={{ padding: "12px", background: "#fff", borderRadius: "10px" }}>
-        <Image src={productDetails?.image} preview={false} />
-        <Row style={{ visibility: "hidden" }}>
+          <img src={productDetails?.image} width="100%" /> 
+
+        {/* <Image src={productDetails?.image} preview={false} /> */}
+        {/* <Row style={{ visibility: "hidden" }}>
           <Col span={4}>
             <Image
               src="https://salt.tikicdn.com/cache/100x100/ts/product/f3/0e/72/b5aebf9321d23f9d28703ad58c631389.jpg.webp"
@@ -115,7 +118,7 @@ const ProductDetailComponent = ({ productId }) => {
               preview={false}
             />
           </Col>
-        </Row>
+        </Row> */}
       </Col>
       <Col span={14} style={{ paddingBottom: "48px" }}>
         <div
@@ -166,7 +169,31 @@ const ProductDetailComponent = ({ productId }) => {
                 padding: "10px 0",
               }}
             >
-              {productDetails?.price?.toLocaleString()}đ
+              {/* {convertPrice(productDetails?.price)} */}
+              {productDetails?.discount ? (
+                <div>
+                  <div style={{ fontSize: "24px" }}>
+                    <span
+                      style={{
+                        color: "#9e9e9e",
+                        textDecoration: "line-through",
+                        marginRight: "10px",
+                      }}
+                    >
+                      {convertPrice(productDetails?.price)}
+                    </span>
+                    -{productDetails?.discount}%
+                  </div>
+                  <div>
+                    {convertPrice(
+                      productDetails?.price -
+                        (productDetails?.price * productDetails?.discount) / 100
+                    )}
+                  </div>
+                </div>
+              ) : (
+                convertPrice(productDetails?.price)
+              )}
             </div>
           </div>
           <div>
@@ -190,7 +217,7 @@ const ProductDetailComponent = ({ productId }) => {
                 fontSize: "16px",
                 lineHeight: "24px",
                 fontWeight: 500,
-                cursor: "pointer"
+                cursor: "pointer",
               }}
             >
               {" "}
