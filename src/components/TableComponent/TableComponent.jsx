@@ -8,6 +8,7 @@ const TableComponent = (props) => {
     isLoading = false,
     columns = [],
     handleDeleteMany,
+    enableCheckbox = true
   } = props;
   const [rowSelectedKeys, setRowSelectedKeys] = useState([]);
 
@@ -22,7 +23,7 @@ const TableComponent = (props) => {
 
   return (
     <>
-      {!!rowSelectedKeys.length && (
+      { enableCheckbox && !!rowSelectedKeys.length && (
         <div
           style={{
             background: "#1d1ddd",
@@ -37,7 +38,7 @@ const TableComponent = (props) => {
         </div>
       )}
       <Table
-        rowSelection={{
+        rowSelection={enableCheckbox && {
           type: selectionType,
           ...rowSelection,
         }}

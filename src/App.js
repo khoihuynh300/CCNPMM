@@ -40,7 +40,6 @@ function App() {
       const access_token = localStorage.getItem("access_token");
       const currentTime = new Date();
       const decoded = handleDecoded(access_token);
-      console.log("access token expire in", decoded?.exp - currentTime.getTime() / 1000);
       if (decoded?.exp < currentTime.getTime() / 1000) {
         const data = await userService.refreshToken();
         localStorage.setItem("access_token", data?.access_token);

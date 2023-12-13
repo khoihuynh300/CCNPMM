@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
 import { WrapperUploadFile } from "./style";
-import { getBase64 } from "../../utils";
+import { getBase64, isNumeric } from "../../utils";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as productService from "../../services/productService";
 import { useQuery } from "@tanstack/react-query";
@@ -37,15 +37,18 @@ const ProductManagement = () => {
 
   const mutation = useMutationHooks((data) => {
     const { name, price, description, image, type, countInStock, discount } = data;
-    const res = productService.createProduct({
-      name,
-      price,
-      description,
-      image,
-      type,
-      countInStock,
-      discount,
-    }, user?.access_token);
+    const res = productService.createProduct(
+      {
+        name,
+        price,
+        description,
+        image,
+        type,
+        countInStock,
+        discount,
+      },
+      user?.access_token
+    );
     return res;
   });
 
@@ -453,9 +456,20 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Discount"
+            label="Discount (%)"
             name="discount"
-            rules={[{ required: true, message: "Nhập giảm giá" }]}
+            rules={[
+              { required: true, message: "Nhập giảm giá" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const discount = getFieldValue("discount");
+                  if (!isNumeric(discount) || discount < 0 || discount > 99) {
+                    return Promise.reject("discount must be in range 0 to 99");
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
           >
             <InputComponent
               value={stateProduct.discount}
@@ -589,9 +603,20 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Discount"
+            label="Discount (%)"
             name="discount"
-            rules={[{ required: true, message: "Nhập giảm giá" }]}
+            rules={[
+              { required: true, message: "Nhập giảm giá" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const discount = getFieldValue("discount");
+                  if (!isNumeric(discount) || discount < 0 || discount > 99) {
+                    return Promise.reject("discount must be in range 0 to 99");
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
           >
             <InputComponent
               value={stateProductDetails.discount}
@@ -618,7 +643,7 @@ const ProductManagement = () => {
                   style={{
                     height: "60px",
                     width: "60px",
-                    borderRadius: "50%",
+                    borderRadius: "5px",
                     objectFit: "cover",
                     marginLeft: "10px",
                   }}

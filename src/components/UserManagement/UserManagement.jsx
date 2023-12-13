@@ -251,6 +251,7 @@ const UserManagement = () => {
       <h2>Quản lý người dùng</h2>
       <div style={{ marginTop: "20px" }}>
         <TableComponent
+          enableCheckbox={false}
           data={dataTable}
           columns={columns}
           handleDeleteMany={handleDeleteManyUsers}

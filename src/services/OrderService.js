@@ -53,3 +53,16 @@ export const getAllOrder = async (access_token) => {
   });
   return res.data;
 };
+
+export const updateOrder = async (id, status, access_token) => {
+  const res = await axiosJWT.put(
+    `${process.env.REACT_APP_API_URL}/order/update-status/${id}`,
+    { status: status },
+    {
+      headers: {
+        token: `Bearer ${access_token}`,
+      },
+    }
+  );
+  return res.data;
+};

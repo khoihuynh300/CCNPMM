@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import * as OrderService from "../../services/OrderService";
 import { useSelector } from "react-redux";
-import { convertPrice } from "../../utils";
+import { convertPrice, formatDateTime } from "../../utils";
 import {
   WrapperItemOrder,
   WrapperListOrder,
@@ -12,24 +12,22 @@ import {
   WrapperStatus,
 } from "./style";
 import ButtonComponent from "../../components/ButtonComponent/ButtonComponent";
-import { useNavigate } from "react-router-dom";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import { message } from "antd";
 
 const MyOrderPage = () => {
   const user = useSelector((state) => state.user);
-  const navigate = useNavigate();
-  const fetchMyOrder = async () => {
+  const fetchMyOrder = async (id, access_token) => {
     const res = await OrderService.getOrderByUserId(user?.id, user?.access_token);
     return res.data;
   };
 
-  const queryOrder = useQuery({ queryKey: ["orders"], queryFn: fetchMyOrder });
+  const queryOrder = useQuery({
+    queryKey: ["orders"],
+    queryFn: fetchMyOrder,
+    enabled: !!user?.id && !!user?.access_token,
+  });
   const { isLoading, data } = queryOrder;
-
-  const handleDetailsOrder = (id) => {
-    navigate(`/details-order/${id}`);
-  };
 
   const mutation = useMutationHooks((data) => {
     const { id, token, orderItems, userId } = data;
@@ -90,17 +88,18 @@ const MyOrderPage = () => {
             {order?.name}
           </div>
 
-          <div>x{order?.amount}</div>
-          <div style={{ marginLeft: "50px" }}>{convertPrice(order?.price)}</div>
-          <div style={{ color: "#242424", marginLeft: "auto", fontSize: "18px" }}>
+          <div style={{ marginLeft: "50px" }}>
             {order?.discount ? (
               <>
                 <div style={{ textDecoration: "line-through" }}>{convertPrice(order?.price)}</div>
-                <div>{convertPrice(order?.price - order?.price  * order?.discount / 100)}</div>
+                <div>{convertPrice(order?.price - (order?.price * order?.discount) / 100)}</div>
               </>
             ) : (
               <div>{convertPrice(order?.price)}</div>
             )}
+          </div>
+          <div style={{ color: "#242424", marginLeft: "auto", marginRight:"6px", fontSize: "18px", position:"relative" }}>
+            <span style={{position:"absolute", left:0, transform: "translate(-100%, -1%)", fontSize:"16px"}}>x</span>{order?.amount}
           </div>
         </WrapperHeaderItem>
       );
@@ -117,10 +116,14 @@ const MyOrderPage = () => {
               <WrapperItemOrder key={order?._id}>
                 <WrapperStatus>
                   <div>
+                    <span>Ngày đặt: </span>
+                    <span>{`${formatDateTime(order.createdAt)}`}</span>
+                  </div>
+                  <div>
                     <span>Trạng thái: </span>
-                    <span style={{ color: "rgb(90, 32, 193)", fontWeight: "bold" }}>{`${
-                      order.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"
-                    }`}</span>
+                    <span
+                      style={{ color: "#1a94ff", fontWeight: "bold" }}
+                    >{`${order.status}`}</span>
                   </div>
                 </WrapperStatus>
                 {renderProduct(order?.orderItems)}
