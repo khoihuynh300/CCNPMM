@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Form, Modal, message } from "antd";
 import React, { useEffect, useState } from "react";
 import TableComponent from "../TableComponent/TableComponent";
@@ -158,10 +158,54 @@ const CategoryManagement = () => {
     );
   };
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+          display: "flex",
+          gap: "4px",
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <InputComponent
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{
+            width: 40,
+            height: 30,
+          }}
+        />
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  });
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+      ...getColumnSearchProps("name"),
     },
     {
       title: "slug",

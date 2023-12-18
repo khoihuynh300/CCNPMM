@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Divider, Drawer, Form, Input, Modal, Select, Space, message } from "antd";
 import React, { useEffect, useState } from "react";
 import TableComponent from "../TableComponent/TableComponent";
@@ -40,7 +40,6 @@ const ProductManagement = () => {
     image: "",
     category: "",
     countInStock: "",
-    newType: "",
     discount: "",
   });
   const [stateProduct, setStateProduct] = useState(initial());
@@ -125,7 +124,7 @@ const ProductManagement = () => {
         description: res?.data?.description,
         rating: res?.data?.rating,
         image: res?.data?.image,
-        category: res?.data?.category._id,
+        category: res?.data?.category?._id,
         countInStock: res?.data?.countInStock,
         discount: res?.data?.discount,
       });
@@ -209,10 +208,65 @@ const ProductManagement = () => {
     );
   };
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+          display: "flex",
+          gap: "4px",
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <InputComponent
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{
+            width: 40,
+            height: 30,
+          }}
+        />
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  });
+
+  const renderCategoryFilter = () => {
+    let filter = []
+    console.log("categories", categories?.data?.data)
+    categories?.data?.data?.forEach(category => {
+      filter = [...filter, {
+        text: category.name,
+        value: category.name,
+      }]
+    });
+    return filter;
+  };
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Price",
@@ -221,13 +275,15 @@ const ProductManagement = () => {
       sorter: (a, b) => a.price - b.price,
     },
     {
-      title: "Rating",
-      dataIndex: "rating",
-      sorter: (a, b) => a.rating - b.rating,
+      title: "Count inStock",
+      dataIndex: "countInStock",
+      sorter: (a, b) => a.countInStock - b.countInStock,
     },
     {
       title: "Category",
       dataIndex: "category",
+      filters: renderCategoryFilter(),
+      onFilter: (value, record) => record.category === value,
     },
     {
       title: "Action",
@@ -274,10 +330,10 @@ const ProductManagement = () => {
   };
 
   const handleChangeSelect = (value) => {
-      setStateProduct({
-        ...stateProduct,
-        category: value,
-      });
+    setStateProduct({
+      ...stateProduct,
+      category: value,
+    });
   };
 
   const handleChangeSelectTypeDetail = (value) => {
@@ -310,7 +366,7 @@ const ProductManagement = () => {
   };
 
   const dataTable = products?.data.map((item) => {
-    return { ...item, key: item._id, category:item.category.name };
+    return { ...item, key: item._id, category: item.category?.name };
   });
 
   const handleDetailsProduct = () => {
@@ -573,7 +629,7 @@ const ProductManagement = () => {
               options={renderOptions(categories?.data?.data)}
             />
           </Form.Item>
-          
+
           <Form.Item
             label="Count inStock"
             name="countInStock"
@@ -599,7 +655,7 @@ const ProductManagement = () => {
               name="description"
             />
           </Form.Item>
-          <Form.Item
+          {/* <Form.Item
             label="Rating"
             name="rating"
             rules={[{ required: true, message: "Please input your rating!" }]}
@@ -610,7 +666,7 @@ const ProductManagement = () => {
               name="rating"
               disabled
             />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item
             label="Discount (%)"
             name="discount"

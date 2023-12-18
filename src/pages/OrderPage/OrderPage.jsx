@@ -464,7 +464,7 @@ const OrderPage = () => {
                   style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
                   <span>Tạm tính</span>
-                  <span style={{ color: "#000", fontSize: "14px", fontWeight: "bold" }}>
+                  <span style={{ color: "#000", fontSize: "16px", fontWeight: "bold" }}>
                     {convertPrice(priceMemo)}
                   </span>
                 </div>
@@ -472,7 +472,7 @@ const OrderPage = () => {
                   style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
                 >
                   <span>Giảm giá</span>
-                  <span style={{ color: "#000", fontSize: "14px", fontWeight: "bold" }}>
+                  <span style={{ color: "#000", fontSize: "16px", fontWeight: "bold" }}>
                     {convertPrice(priceDiscountMemo)}
                   </span>
                 </div>

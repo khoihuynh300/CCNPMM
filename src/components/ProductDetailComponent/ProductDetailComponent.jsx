@@ -1,6 +1,6 @@
 import { StarFilled, PlusOutlined, MinusOutlined } from "@ant-design/icons";
-import { Col, Image, Input, Row } from "antd";
-import React, { useState } from "react";
+import { Col, Form, Image, Input, Modal, Row, message } from "antd";
+import React, { useEffect, useState } from "react";
 
 import ButtonComponent from "../ButtonComponent/ButtonComponent";
 import * as productService from "../../services/productService";
@@ -9,9 +9,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
 import { convertPrice } from "../../utils";
+import { useMutationHooks } from "../../hooks/useMutationHooks";
+import * as orderService from "../../services/OrderService";
+import * as userService from "../../services/userService";
+import InputComponent from "../InputComponent/InputComponent";
+import { updateUser } from "../../redux/slices/userSlice";
 
 const ProductDetailComponent = ({ productId }) => {
   const [numProduct, setNumProduct] = useState(1);
+  const [isOpenModalUpdateInfo, setIsOpenModalUpdateInfo] = useState(false);
+  const [stateUserDetails, setStateUserDetails] = useState({
+    name: "",
+    phone: "",
+    address: "",
+  });
+
+  const [form] = Form.useForm();
 
   const user = useSelector((state) => state.user);
 
@@ -28,6 +41,43 @@ const ProductDetailComponent = ({ productId }) => {
     } else if (value === "") {
       setNumProduct("");
     }
+  };
+
+  const handleOnchangeDetails = (e) => {
+    setStateUserDetails({
+      ...stateUserDetails,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleCancleUpdate = () => {
+    setStateUserDetails({
+      name: "",
+      email: "",
+      phone: "",
+      isAdmin: false,
+    });
+    form.resetFields();
+    setIsOpenModalUpdateInfo(false);
+  };
+
+  const handleUpdateInforUser = () => {
+    const { name, address, phone } = stateUserDetails;
+    if (name && address && phone) {
+      mutationUpdate.mutate(
+        { id: user?.id, token: user?.access_token, ...stateUserDetails },
+        {
+          onSuccess: () => {
+            dispatch(updateUser({ name, address, phone }));
+            setIsOpenModalUpdateInfo(false);
+          },
+        }
+      );
+    }
+  };
+
+  const handleChangeAddress = () => {
+    setIsOpenModalUpdateInfo(true);
   };
 
   const getDetailsProduct = async () => {
@@ -48,10 +98,48 @@ const ProductDetailComponent = ({ productId }) => {
     }
   };
 
+  const mutationAddOrder = useMutationHooks((data) => {
+    const { token, ...rests } = data;
+    const res = orderService.createOrder({ ...rests }, token);
+    return res;
+  });
+
+  const mutationUpdate = useMutationHooks((data) => {
+    const { id, token, ...rests } = data;
+    const res = userService.updateUser(id, { ...rests }, token);
+    return res;
+  });
+
   const handleOrder = () => {
     if (!user?.id) {
       navigate("/sign-in", { state: location?.pathname });
     } else {
+      if (!user?.phone || !user.address || !user.name) {
+        setIsOpenModalUpdateInfo(true);
+      } else {
+        const orderItem = {
+          name: productDetails.name,
+          amount: numProduct,
+          image: productDetails.image,
+          price: productDetails.price,
+          product: productId,
+          discount: productDetails.discount,
+          countInstock: productDetails.countInstock,
+        };
+
+        const itemsPrice = productDetails.price * numProduct;
+        const totalPrice = itemsPrice - (itemsPrice * productDetails.discount) / 100;
+        mutationAddOrder.mutate({
+          token: user?.access_token,
+          orderItems: [orderItem],
+          fullName: user?.name,
+          address: user?.address,
+          phone: user?.phone,
+          itemsPrice: itemsPrice,
+          totalPrice: totalPrice,
+          user: user?.id,
+        });
+      }
     }
   };
 
@@ -72,13 +160,38 @@ const ProductDetailComponent = ({ productId }) => {
           },
         })
       );
+      navigate("/cart");
     }
   };
+
+  const { data: dataAdd, isLoading: isLoadingAddOrder, isSuccess, isError } = mutationAddOrder;
+  useEffect(() => {
+    if (isSuccess && dataAdd?.status === "OK") {
+      message.success("Đặt hàng thành công");
+      navigate("/my-order");
+    } else if (isError) {
+      message.error();
+    }
+  }, [isSuccess, isError]);
+
+  useEffect(() => {
+    if (isOpenModalUpdateInfo) {
+      setStateUserDetails({
+        name: user?.name,
+        address: user?.address,
+        phone: user?.phone,
+      });
+    }
+  }, [isOpenModalUpdateInfo]);
+
+  useEffect(() => {
+    form.setFieldsValue(stateUserDetails);
+  }, [form, stateUserDetails]);
 
   return (
     <Row gutter={24}>
       <Col span={10} style={{ padding: "12px", background: "#fff", borderRadius: "10px" }}>
-          <img src={productDetails?.image} width="100%" /> 
+        <img src={productDetails?.image} width="100%" />
 
         {/* <Image src={productDetails?.image} preview={false} /> */}
         {/* <Row style={{ visibility: "hidden" }}>
@@ -140,21 +253,21 @@ const ProductDetailComponent = ({ productId }) => {
             {productDetails?.name}
           </span>
           <div>
+            {/* <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
             <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
             <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
             <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
-            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
-            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
+            <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} /> */}
 
             <span
               style={{
-                marginLeft: "4px",
+                // marginLeft: "4px",
                 fontSize: "15px",
                 lineHeight: "24px",
                 color: "rgb(120, 120, 120)",
               }}
             >
-              | Đã bán {productDetails?.selled}
+              Đã bán {productDetails?.selled}
             </span>
           </div>
           <div
@@ -219,6 +332,7 @@ const ProductDetailComponent = ({ productId }) => {
                 fontWeight: 500,
                 cursor: "pointer",
               }}
+              onClick={handleChangeAddress}
             >
               {" "}
               Đổi địa chỉ
@@ -288,13 +402,56 @@ const ProductDetailComponent = ({ productId }) => {
               </div>
             </div>
           </div>
-          <div style={{ display: "flex", gap: "12px" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <Row>
+              <Col span={4} style={{ fontSize: "18px" }}>
+                <span>Tạm tính</span>
+              </Col>
+              <Col span={8} style={{ fontSize: "18px" }}>
+                <div style={{ textAlign: "right", width: "100%" }}>
+                  {convertPrice(productDetails.price * numProduct)}
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ fontSize: "18px" }}>
+                <div>Giảm giá</div>
+              </Col>
+              <Col span={8} style={{ fontSize: "18px" }}>
+                <div style={{ textAlign: "right", width: "100%" }}>
+                  {convertPrice(
+                    ((productDetails.price * productDetails.discount) / 100) * numProduct
+                  )}
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12} style={{ background: "#ccc" }}></Col>
+            </Row>
+            <Row>
+              <Col span={4} style={{ fontSize: "18px" }}>
+                <div>Tổng tiền</div>
+              </Col>
+              <Col
+                span={8}
+                style={{ fontSize: "18px", color: "rgb(254, 56, 52)", fontWeight: "bold" }}
+              >
+                <div style={{ textAlign: "right", width: "100%" }}>
+                  {convertPrice(
+                    productDetails.price * numProduct -
+                      ((productDetails.price * productDetails.discount) / 100) * numProduct
+                  )}
+                </div>
+              </Col>
+            </Row>
+          </div>
+          <div style={{ display: "flex", gap: "6px", marginTop: "10px" }}>
             <ButtonComponent
               size={40}
               style={{
                 background: "rgb(255, 57, 69)",
                 height: "48px",
-                width: "220px",
+                width: "150px",
                 color: "#fff",
                 fontWeight: 500,
                 fontSize: "15px",
@@ -308,7 +465,7 @@ const ProductDetailComponent = ({ productId }) => {
               style={{
                 background: "#fff",
                 height: "48px",
-                width: "220px",
+                width: "150px",
                 color: "rgb(13,92,182)",
                 fontWeight: 500,
                 border: "1px solid rgb(13,92,182)",
@@ -318,6 +475,55 @@ const ProductDetailComponent = ({ productId }) => {
               Thêm vào Giỏ
             </ButtonComponent>
           </div>
+          <Modal
+            title="Cập nhật thông tin giao hàng"
+            open={isOpenModalUpdateInfo}
+            onCancel={handleCancleUpdate}
+            onOk={handleUpdateInforUser}
+          >
+            <Form
+              name="basic"
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              autoComplete="on"
+              form={form}
+            >
+              <Form.Item
+                label="Name"
+                name="name"
+                rules={[{ required: true, message: "Please input your name!" }]}
+              >
+                <InputComponent
+                  value={stateUserDetails["name"]}
+                  onChange={handleOnchangeDetails}
+                  name="name"
+                />
+              </Form.Item>
+              <Form.Item
+                label="Phone"
+                name="phone"
+                rules={[{ required: true, message: "Please input your  phone!" }]}
+              >
+                <InputComponent
+                  value={stateUserDetails.phone}
+                  onChange={handleOnchangeDetails}
+                  name="phone"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Adress"
+                name="address"
+                rules={[{ required: true, message: "Please input your  address!" }]}
+              >
+                <InputComponent
+                  value={stateUserDetails.address}
+                  onChange={handleOnchangeDetails}
+                  name="address"
+                />
+              </Form.Item>
+            </Form>
+          </Modal>
         </div>
       </Col>
     </Row>

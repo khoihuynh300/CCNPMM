@@ -74,7 +74,7 @@ const TypeProductsPage = () => {
           </div>
         </Col>
       </Row>
-      <div>
+      {/* <div>
         <Pagination
           showQuickJumper
           total={500}
@@ -82,7 +82,7 @@ const TypeProductsPage = () => {
           // onChange={onChange}
           style={{ textAlign: "center", marginTop: "10px", marginBottom: "10px" }}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

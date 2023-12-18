@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Drawer, Form, Modal, Select, message } from "antd";
 import React, { useEffect, useState } from "react";
 import TableComponent from "../TableComponent/TableComponent";
@@ -122,12 +122,12 @@ const UserManagement = () => {
   }, [isSuccessDelected, isErrorDeleted]);
 
   useEffect(() => {
-    if (isSuccessDeletedMany && dataDeletedMany?.status === 'OK') {
-      message.success("Xóa thành công")
+    if (isSuccessDeletedMany && dataDeletedMany?.status === "OK") {
+      message.success("Xóa thành công");
     } else if (isErrorDeletedMany) {
-      message.error("Lỗi")
+      message.error("Lỗi");
     }
-  }, [isSuccessDeletedMany, isErrorDeletedMany])
+  }, [isSuccessDeletedMany, isErrorDeletedMany]);
 
   const renderAction = () => {
     return (
@@ -144,18 +144,64 @@ const UserManagement = () => {
     );
   };
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+          display: "flex",
+          gap: "4px",
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <InputComponent
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{
+            width: 40,
+            height: 30,
+          }}
+        />
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  });
+
   const columns = [
     {
       title: "Name",
       dataIndex: "name",
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Email",
       dataIndex: "email",
+      ...getColumnSearchProps("email"),
     },
     {
       title: "Address",
       dataIndex: "address",
+      ...getColumnSearchProps("address"),
     },
     {
       title: "Admin",
@@ -175,6 +221,7 @@ const UserManagement = () => {
     {
       title: "Phone",
       dataIndex: "phone",
+      ...getColumnSearchProps("phone"),
     },
     // {
     //   title: "Action",

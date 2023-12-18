@@ -30,7 +30,7 @@ const CardComponent = (props) => {
       onClick={onClick}
     >
       <StyleNameProduct>{name}</StyleNameProduct>
-      <WrapperReportText>
+      {/* <WrapperReportText>
         <span>
           <span>{rating}</span>
           <StarFilled style={{ fontSize: "12px", color: "rgb(253, 216, 54)" }} />
@@ -43,9 +43,9 @@ const CardComponent = (props) => {
             color: "rgb(120, 120, 120)",
           }}
         >
-          | Đã bán {selled}
+          Đã bán {selled}
         </span>
-      </WrapperReportText>
+      </WrapperReportText> */}
       {discount !== 0 ? (
         <>
           <WrapperPriceOrigin>{price?.toLocaleString()} đ</WrapperPriceOrigin>

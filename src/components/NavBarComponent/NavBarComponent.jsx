@@ -2,29 +2,25 @@ import React, { useEffect, useState } from "react";
 import { Checkbox } from "antd";
 
 import { WrapperLabelText, WrapperTextValue, WrapperContent } from "./style";
-import * as productService from "../../services/productService";
+import * as categoryService from "../../services/categoryService";
 import { useNavigate } from "react-router-dom";
 
 const NavBarComponent = () => {
-  const [typeProduct, setTypeProduct] = useState([]);
-
+  const [categories, setCategories] = useState([])
   const navigate = useNavigate();
 
-  const fetchTypeProduct = async () => {
-    const res = await productService.getAllTypeProduct();
-    setTypeProduct(res?.data);
+  const fetchCategories = async () => {
+    const res = await categoryService.getAllCategory();
+    setCategories(res?.data);
   };
 
   useEffect(() => {
-    fetchTypeProduct();
+    fetchCategories();
   }, []);
 
-  const handleNavigatetype = (type) => {
+  const handleNavigatetype = (slug) => {
     navigate(
-      `/category/${type
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        ?.replace(/ /g, "_")}`
+      `/category/${slug}`
     );
   };
 
@@ -36,10 +32,10 @@ const NavBarComponent = () => {
             <WrapperTextValue
               key={index}
               onClick={() => {
-                handleNavigatetype(option);
+                handleNavigatetype(option.slug);
               }}
             >
-              {option}
+              {option.name}
             </WrapperTextValue>
           );
         });
@@ -81,7 +77,7 @@ const NavBarComponent = () => {
   return (
     <div style={{ backgroundColor: "#fff" }}>
       <WrapperLabelText>Danh mục</WrapperLabelText>
-      <WrapperContent>{renderContent("category", typeProduct)}</WrapperContent>
+      <WrapperContent>{renderContent("category", categories)}</WrapperContent>
       {/* <WrapperContent>
         {renderContent("checkbox", [
           { value: "a", label: "A" },

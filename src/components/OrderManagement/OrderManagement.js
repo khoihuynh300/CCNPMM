@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Drawer, Form, Select, message } from "antd";
 
 import TableComponent from "../TableComponent/TableComponent";
@@ -23,6 +23,7 @@ const OrderManagement = () => {
   });
   const [stateOrder, setStateOrder] = useState(initial());
   const [rowSelected, setRowSelected] = useState("");
+  const [statusOrder, setStatusOrder] = useState("");
 
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
 
@@ -74,18 +75,69 @@ const OrderManagement = () => {
     );
   };
 
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+  };
+
+  const getColumnSearchProps = (dataIndex) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div
+        style={{
+          padding: 8,
+          display: "flex",
+          gap: "4px",
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <InputComponent
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{
+            width: 40,
+            height: 30,
+          }}
+        />
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        style={{
+          color: filtered ? "#1890ff" : undefined,
+        }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex].toString().toLowerCase().includes(value.toLowerCase()),
+  });
+
   const columns = [
+    {
+      title: "Id",
+      dataIndex: "_id",
+      ...getColumnSearchProps("_id"),
+    },
     {
       title: "Username",
       dataIndex: "userName",
+      ...getColumnSearchProps("username"),
     },
     {
       title: "Phone",
       dataIndex: "phone",
+      ...getColumnSearchProps("phone"),
     },
     {
       title: "Address",
       dataIndex: "address",
+      ...getColumnSearchProps("address"),
     },
     {
       title: "Total price",
@@ -99,6 +151,14 @@ const OrderManagement = () => {
     {
       title: "Status",
       dataIndex: "status",
+      filters: [
+        { text: "Chưa xác nhận", value: "Chưa xác nhận" },
+        { text: "Đã xác nhận", value: "Đã xác nhận" },
+        { text: "Đang giao", value: "Đang giao" },
+        { text: "Đã giao", value: "Đã giao" },
+        { text: "Hủy", value: "Hủy" },
+      ],
+      onFilter: (value, record) => record.status === value,
     },
     {
       title: "Action",
@@ -124,7 +184,6 @@ const OrderManagement = () => {
   const getDetailsOrder = async (id) => {
     const res = await OrderService.getDetailsOrder(id, user?.access_token);
     if (res?.data) {
-
       setStateOrder({
         username: res?.data?.shippingAddress?.fullName,
         phone: res?.data?.shippingAddress?.phone,
@@ -134,6 +193,7 @@ const OrderManagement = () => {
         createdAt: formatDateTime(res?.data?.createdAt),
         orderItems: res?.data?.orderItems,
       });
+      setStatusOrder(res?.data?.status);
     }
   };
 
@@ -172,6 +232,7 @@ const OrderManagement = () => {
       {
         onSettled: () => {
           queryOrder.refetch();
+          setIsOpenDrawer(false);
         },
       }
     );
@@ -237,6 +298,14 @@ const OrderManagement = () => {
     );
   };
 
+  const statusData = {
+    "Chưa xác nhận": ["Chưa xác nhận", "Đã xác nhận", "Hủy"],
+    "Đã xác nhận": ["Đã xác nhận", "Đang giao"],
+    "Đang giao": ["Đang giao", "Đã giao"],
+    "Đã giao": ["Đã giao"],
+    Hủy: ["Hủy"],
+  };
+
   return (
     <div>
       <h2>Quản lý đơn hàng</h2>
@@ -293,7 +362,7 @@ const OrderManagement = () => {
               disabled
             />
           </Form.Item>
-          
+
           <Form.Item label="Create at" name="createdAt">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
@@ -302,13 +371,13 @@ const OrderManagement = () => {
               disabled
             />
           </Form.Item>
-          
+
           <div style={{ marginLeft: "20px" }}>
             {stateOrder?.orderItems?.map((order) => {
               return renderProduct(order);
             })}
           </div>
-          
+
           <Form.Item label="TotalPrice" name="totalPrice">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
@@ -323,12 +392,9 @@ const OrderManagement = () => {
               name="status"
               value={stateOrder.status}
               onChange={handleChangeSelectStatus}
-              options={["Chưa xác nhận", "Đã xác nhận", "Đang giao", "Đã giao", "Hủy"].map(
-                (opt) => ({ value: opt, label: opt })
-              )}
+              options={statusData[statusOrder]?.map((opt) => ({ value: opt, label: opt }))}
             />
           </Form.Item>
-          
 
           <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
             <Button type="primary" htmlType="submit">
