@@ -45,7 +45,7 @@ const CategoryManagement = () => {
 
   const mutationDeletedMany = useMutationHooks((data) => {
     const { token, ...ids } = data;
-    const res = categoryService.deleteCategory(ids[0], token);
+    const res = categoryService.deleteManyCategory(ids, token);
     return res;
   });
 

@@ -13,12 +13,14 @@ import { WrapperHeaderItem } from "../../pages/MyOrderPage/style";
 
 const OrderManagement = () => {
   const initial = () => ({
+    id:"",
     username: "",
     phone: "",
     address: "",
     status: "",
     totalPrice: "",
     createdAt: "",
+    updatedAt: "",
     orderItems: [],
   });
   const [stateOrder, setStateOrder] = useState(initial());
@@ -184,13 +186,16 @@ const OrderManagement = () => {
   const getDetailsOrder = async (id) => {
     const res = await OrderService.getDetailsOrder(id, user?.access_token);
     if (res?.data) {
+      console.log(res?.data)
       setStateOrder({
+        id:id,
         username: res?.data?.shippingAddress?.fullName,
         phone: res?.data?.shippingAddress?.phone,
         address: res?.data?.shippingAddress?.address,
         status: res?.data?.status,
         totalPrice: res?.data?.totalPrice,
         createdAt: formatDateTime(res?.data?.createdAt),
+        updatedAt: formatDateTime(res?.data?.updatedAt),
         orderItems: res?.data?.orderItems,
       });
       setStatusOrder(res?.data?.status);
@@ -232,7 +237,7 @@ const OrderManagement = () => {
       {
         onSettled: () => {
           queryOrder.refetch();
-          setIsOpenDrawer(false);
+          setStatusOrder(stateOrder.status)
         },
       }
     );
@@ -338,6 +343,14 @@ const OrderManagement = () => {
           autoComplete="on"
           form={updateOrderForm}
         >
+          <Form.Item label="Id" name="id">
+            <InputComponent
+              style={{ background: "white", color: "#333", border: "0px" }}
+              value={stateOrder.id}
+              name="id"
+              disabled
+            />
+          </Form.Item>
           <Form.Item label="Username" name="username">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
@@ -363,11 +376,20 @@ const OrderManagement = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Create at" name="createdAt">
+          <Form.Item label="Created at" name="createdAt">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={formatDateTime(stateOrder.createdAt)}
               name="createdAt"
+              disabled
+            />
+          </Form.Item>
+
+          <Form.Item label="Updated at" name="updatedAt">
+            <InputComponent
+              style={{ background: "white", color: "#333", border: "0px" }}
+              value={formatDateTime(stateOrder.updatedAt)}
+              name="updatedAt"
               disabled
             />
           </Form.Item>

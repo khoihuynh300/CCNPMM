@@ -45,3 +45,12 @@ export const getCategoryDetail = async (id) => {
   const res = await axios.get(`${process.env.REACT_APP_API_URL}/category/get-details/${id}`);
   return res.data;
 };
+
+export const deleteManyCategory = async (data, access_token) => {
+  const res = await axiosJWT.post(`${process.env.REACT_APP_API_URL}/category/delete-many`, data, {
+    headers: {
+      token: `Bearer ${access_token}`,
+    },
+  });
+  return res.data;
+};

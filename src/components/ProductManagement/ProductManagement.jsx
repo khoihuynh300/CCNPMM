@@ -252,7 +252,6 @@ const ProductManagement = () => {
 
   const renderCategoryFilter = () => {
     let filter = []
-    console.log("categories", categories?.data?.data)
     categories?.data?.data?.forEach(category => {
       filter = [...filter, {
         text: category.name,
@@ -417,6 +416,9 @@ const ProductManagement = () => {
     );
   };
 
+  const filterOptionCategory = (input, option) =>
+  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+
   return (
     <div>
       <h2>Quản lý sản phẩm</h2>
@@ -482,6 +484,8 @@ const ProductManagement = () => {
               value={stateProduct.category}
               onChange={handleChangeSelect}
               options={renderOptions(categories?.data?.data)}
+              showSearch
+              filterOption={filterOptionCategory}
               dropdownRender={(menu) => (
                 <>
                   {menu}
@@ -627,6 +631,35 @@ const ProductManagement = () => {
               value={stateProductDetails.category}
               onChange={handleChangeSelectTypeDetail}
               options={renderOptions(categories?.data?.data)}
+              showSearch
+              filterOption={filterOptionCategory}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Divider
+                    style={{
+                      margin: "8px 0",
+                    }}
+                  />
+                  <Space
+                    style={{
+                      padding: "0 8px 4px",
+                    }}
+                  >
+                    <Input
+                      placeholder="Nhập tên danh mục mới"
+                      value={stateCategoryName}
+                      onChange={(e) => {
+                        setStateCategoryName(e.target.value);
+                      }}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    />
+                    <Button type="text" icon={<PlusOutlined />} onClick={onFinishCategory}>
+                      Thêm category
+                    </Button>
+                  </Space>
+                </>
+              )}
             />
           </Form.Item>
 

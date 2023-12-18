@@ -409,7 +409,7 @@ const ProductDetailComponent = ({ productId }) => {
               </Col>
               <Col span={8} style={{ fontSize: "18px" }}>
                 <div style={{ textAlign: "right", width: "100%" }}>
-                  {convertPrice(productDetails.price * numProduct)}
+                  {convertPrice(productDetails?.price * numProduct)}
                 </div>
               </Col>
             </Row>
@@ -420,7 +420,7 @@ const ProductDetailComponent = ({ productId }) => {
               <Col span={8} style={{ fontSize: "18px" }}>
                 <div style={{ textAlign: "right", width: "100%" }}>
                   {convertPrice(
-                    ((productDetails.price * productDetails.discount) / 100) * numProduct
+                    ((productDetails?.price * productDetails?.discount) / 100) * numProduct
                   )}
                 </div>
               </Col>
@@ -438,8 +438,8 @@ const ProductDetailComponent = ({ productId }) => {
               >
                 <div style={{ textAlign: "right", width: "100%" }}>
                   {convertPrice(
-                    productDetails.price * numProduct -
-                      ((productDetails.price * productDetails.discount) / 100) * numProduct
+                    productDetails?.price * numProduct -
+                      ((productDetails?.price * productDetails?.discount) / 100) * numProduct
                   )}
                 </div>
               </Col>
