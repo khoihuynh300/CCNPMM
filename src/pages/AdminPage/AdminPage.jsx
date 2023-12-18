@@ -1,43 +1,44 @@
 import React, { useState } from "react";
 import {
-  HomeOutlined,
   UserOutlined,
   AppstoreOutlined,
   ShoppingCartOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";
 
-import HomeManagement from "../../components/HomeManagement/HomeManagement";
 import UserManagement from "../../components/UserManagement/UserManagement";
 import ProductManagement from "../../components/ProductManagement/ProductManagement";
 import OrderManagement from "../../components/OrderManagement/OrderManagement";
+import CategoryManagement from "../../components/CategoryManagement/CategoryManagement";
 import Sider from "antd/es/layout/Sider";
 import HeaderComponent from "../../components/HeaderComponent/HeaderComponent";
 
+const keys = ["category", "users", "products", "orders"]
 const items = [
   {
-    key: "home",
-    icon: <HomeOutlined />,
-    children: "",
-    label: "Trang chủ",
-    type: "",
-  },
-  {
-    key: "users",
+    key: keys[1],
     icon: <UserOutlined />,
     children: "",
     label: "Người dùng",
     type: "",
   },
   {
-    key: "products",
+    key: keys[0],
+    icon: <UnorderedListOutlined />,
+    children: "",
+    label: "Danh mục",
+    type: "",
+  },
+  {
+    key: keys[2],
     icon: <AppstoreOutlined />,
     children: "",
     label: "Sản phẩm",
     type: "",
   },
   {
-    key: "orders",
+    key: keys[3],
     icon: <ShoppingCartOutlined />,
     children: "",
     label: "Đơn hàng",
@@ -46,23 +47,23 @@ const items = [
 ];
 
 const AdminPage = () => {
-  const [keySelected, setKeySelected] = useState(items[0].key);
+  const [keySelected, setKeySelected] = useState(keys[1]);
   const onClickNavBar = ({ key }) => {
     setKeySelected(key);
   };
 
   const renderPage = (key) => {
     switch (key) {
-      case items[0].key:
-        return <HomeManagement />;
-      case items[1].key:
+      case keys[0]:
+        return <CategoryManagement />;
+      case keys[1]:
         return <UserManagement />;
-      case items[2].key:
+      case keys[2]:
         return <ProductManagement />;
-      case items[3].key:
+      case keys[3]:
         return <OrderManagement />;
       default:
-        return <HomeManagement />;
+        return <UserManagement />;
     }
   };
 

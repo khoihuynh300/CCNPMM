@@ -124,7 +124,6 @@ const OrderManagement = () => {
   const getDetailsOrder = async (id) => {
     const res = await OrderService.getDetailsOrder(id, user?.access_token);
     if (res?.data) {
-      console.log("check", res?.data?.orderItems);
 
       setStateOrder({
         username: res?.data?.shippingAddress?.fullName,

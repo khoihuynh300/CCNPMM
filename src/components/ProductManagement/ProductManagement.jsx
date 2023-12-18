@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Drawer, Form, Modal, Select, message } from "antd";
+import { Button, Divider, Drawer, Form, Input, Modal, Select, Space, message } from "antd";
 import React, { useEffect, useState } from "react";
 import TableComponent from "../TableComponent/TableComponent";
 import InputComponent from "../InputComponent/InputComponent";
@@ -7,12 +7,26 @@ import { WrapperUploadFile } from "./style";
 import { getBase64, isNumeric } from "../../utils";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as productService from "../../services/productService";
+import * as categoryService from "../../services/categoryService";
 import { useQuery } from "@tanstack/react-query";
-import { renderOptions } from "../../utils";
 import { useSelector } from "react-redux";
+
+const renderOptions = (categories) => {
+  let results = [];
+  if (categories) {
+    results = categories?.map((category) => {
+      return {
+        value: category._id,
+        label: category.name,
+      };
+    });
+  }
+  return results;
+};
 
 const ProductManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [rowSelected, setRowSelected] = useState("");
   const [isOpenDrawer, setIsOpenDrawer] = useState(false);
   const [isModalOpenDelete, setIsModalOpenDelete] = useState(false);
@@ -24,26 +38,27 @@ const ProductManagement = () => {
     price: "",
     description: "",
     image: "",
-    type: "",
+    category: "",
     countInStock: "",
     newType: "",
     discount: "",
   });
   const [stateProduct, setStateProduct] = useState(initial());
   const [stateProductDetails, setStateProductDetails] = useState(initial());
+  const [stateCategoryName, setStateCategoryName] = useState("");
 
   const [createProductForm] = Form.useForm();
   const [updateProductForm] = Form.useForm();
 
   const mutation = useMutationHooks((data) => {
-    const { name, price, description, image, type, countInStock, discount } = data;
+    const { name, price, description, image, category, countInStock, discount } = data;
     const res = productService.createProduct(
       {
         name,
         price,
         description,
         image,
-        type,
+        category,
         countInStock,
         discount,
       },
@@ -67,6 +82,11 @@ const ProductManagement = () => {
   const mutationDeletedMany = useMutationHooks((data) => {
     const { token, ...ids } = data;
     const res = productService.deleteManyProduct(ids, token);
+    return res;
+  });
+
+  const mutationCategory = useMutationHooks((name) => {
+    const res = categoryService.createCategory(name, user?.access_token);
     return res;
   });
 
@@ -105,19 +125,19 @@ const ProductManagement = () => {
         description: res?.data?.description,
         rating: res?.data?.rating,
         image: res?.data?.image,
-        type: res?.data?.type,
+        category: res?.data?.category._id,
         countInStock: res?.data?.countInStock,
         discount: res?.data?.discount,
       });
     }
   };
 
-  const getAllTypeProduct = async () => {
-    const res = await productService.getAllTypeProduct();
+  const getAllCategory = async () => {
+    const res = await categoryService.getAllCategory();
     return res;
   };
   const queryProduct = useQuery({ queryKey: ["products"], queryFn: getAllProducts });
-  const typeProduct = useQuery({ queryKey: ["type-product"], queryFn: getAllTypeProduct });
+  const categories = useQuery({ queryKey: ["categories"], queryFn: getAllCategory });
   const { isPending: isLoadingProducts, data: products } = queryProduct;
 
   useEffect(() => {
@@ -206,8 +226,8 @@ const ProductManagement = () => {
       sorter: (a, b) => a.rating - b.rating,
     },
     {
-      title: "Type",
-      dataIndex: "type",
+      title: "Category",
+      dataIndex: "category",
     },
     {
       title: "Action",
@@ -223,7 +243,7 @@ const ProductManagement = () => {
       price: "",
       description: "",
       image: "",
-      type: "",
+      category: "",
       countInStock: "",
       discount: "",
     });
@@ -231,18 +251,17 @@ const ProductManagement = () => {
   };
 
   const onFinish = () => {
-    const params = {
-      name: stateProduct.name,
-      price: stateProduct.price,
-      description: stateProduct.description,
-      image: stateProduct.image,
-      type: stateProduct.type === "add_type" ? stateProduct.newType : stateProduct.type,
-      countInStock: stateProduct.countInStock,
-      discount: stateProduct.discount,
-    };
-    mutation.mutate(params, {
+    mutation.mutate(stateProduct, {
       onSettled: () => {
         queryProduct.refetch();
+      },
+    });
+  };
+
+  const onFinishCategory = () => {
+    mutationCategory.mutate(stateCategoryName, {
+      onSettled: () => {
+        categories.refetch();
       },
     });
   };
@@ -255,16 +274,16 @@ const ProductManagement = () => {
   };
 
   const handleChangeSelect = (value) => {
-    setStateProduct({
-      ...stateProduct,
-      type: value,
-    });
+      setStateProduct({
+        ...stateProduct,
+        category: value,
+      });
   };
 
   const handleChangeSelectTypeDetail = (value) => {
     setStateProductDetails({
       ...stateProductDetails,
-      type: value,
+      category: value,
     });
   };
 
@@ -291,7 +310,7 @@ const ProductManagement = () => {
   };
 
   const dataTable = products?.data.map((item) => {
-    return { ...item, key: item._id };
+    return { ...item, key: item._id, category:item.category.name };
   });
 
   const handleDetailsProduct = () => {
@@ -306,20 +325,8 @@ const ProductManagement = () => {
   };
 
   const onUpdateProduct = () => {
-    const params = {
-      name: stateProductDetails.name,
-      price: stateProductDetails.price,
-      description: stateProductDetails.description,
-      image: stateProductDetails.image,
-      type:
-        stateProductDetails.type === "add_type"
-          ? stateProductDetails.newType
-          : stateProductDetails.type,
-      countInStock: stateProductDetails.countInStock,
-      discount: stateProductDetails.discount,
-    };
     mutationUpdate.mutate(
-      { id: rowSelected, token: user?.access_token, ...params },
+      { id: rowSelected, token: user?.access_token, ...stateProductDetails },
       {
         onSettled: () => {
           queryProduct.refetch();
@@ -410,30 +417,44 @@ const ProductManagement = () => {
           </Form.Item>
 
           <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Nhập loại sản phẩm" }]}
+            label="Danh mục"
+            name="category"
+            rules={[{ required: true, message: "Nhập danh mục sản phẩm" }]}
           >
             <Select
-              name="type"
-              value={stateProduct.type}
+              name="category"
+              value={stateProduct.category}
               onChange={handleChangeSelect}
-              options={renderOptions(typeProduct?.data?.data)}
+              options={renderOptions(categories?.data?.data)}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <Divider
+                    style={{
+                      margin: "8px 0",
+                    }}
+                  />
+                  <Space
+                    style={{
+                      padding: "0 8px 4px",
+                    }}
+                  >
+                    <Input
+                      placeholder="Nhập tên danh mục mới"
+                      value={stateCategoryName}
+                      onChange={(e) => {
+                        setStateCategoryName(e.target.value);
+                      }}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    />
+                    <Button type="text" icon={<PlusOutlined />} onClick={onFinishCategory}>
+                      Thêm category
+                    </Button>
+                  </Space>
+                </>
+              )}
             />
           </Form.Item>
-          {stateProduct.type === "add_type" && (
-            <Form.Item
-              label="New type"
-              name="newType"
-              rules={[{ required: true, message: "Nhập loại sản phẩm" }]}
-            >
-              <InputComponent
-                value={stateProduct.newType}
-                onChange={handleOnchange}
-                name="newType"
-              />
-            </Form.Item>
-          )}
           <Form.Item
             label="Count inStock"
             name="countInStock"
@@ -541,30 +562,18 @@ const ProductManagement = () => {
           </Form.Item>
 
           <Form.Item
-            label="Type"
-            name="type"
-            rules={[{ required: true, message: "Nhập loại sản phẩm" }]}
+            label="Category"
+            name="category"
+            rules={[{ required: true, message: "Nhập danh mục sản phẩm" }]}
           >
             <Select
-              name="type"
-              value={stateProductDetails.type}
+              name="category"
+              value={stateProductDetails.category}
               onChange={handleChangeSelectTypeDetail}
-              options={renderOptions(typeProduct?.data?.data)}
+              options={renderOptions(categories?.data?.data)}
             />
           </Form.Item>
-          {stateProductDetails.type === "add_type" && (
-            <Form.Item
-              label="New type"
-              name="newType"
-              rules={[{ required: true, message: "Nhập loại sản phẩm" }]}
-            >
-              <InputComponent
-                value={stateProductDetails.newType}
-                onChange={handleOnchangeDetails}
-                name="newType"
-              />
-            </Form.Item>
-          )}
+          
           <Form.Item
             label="Count inStock"
             name="countInStock"

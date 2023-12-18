@@ -1,14 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const TypeProduct = ({ name }) => {
+const TypeProduct = ({ name, slug }) => {
   const navigate = useNavigate();
   const handleNavigatetype = () => {
     navigate(
-      `/category/${name
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        ?.replace(/ /g, "_")}`
+      `/category/${slug}`
     );
   };
 

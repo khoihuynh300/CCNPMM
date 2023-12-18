@@ -4,12 +4,13 @@ import TypeProduct from "../../components/TypeProduct/TypeProduct";
 import { WrapperButtonHover, WrapperTypeProduct } from "./style";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import * as productService from "../../services/productService";
+import * as categoryService from "../../services/categoryService";
 import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const HomePage = () => {
   const [products, setProducts] = useState([]);
-  const [typeProduct, setTypeProduct] = useState([]);
+  const [categories, setCategories] = useState([])
 
   const searchProduct = useSelector((state) => state.product?.search);
 
@@ -20,9 +21,9 @@ const HomePage = () => {
     setProducts(res.data);
     return res;
   };
-  const fetchTypeProduct = async () => {
-    const res = await productService.getAllTypeProduct();
-    setTypeProduct(res?.data);
+  const fetchCategories = async () => {
+    const res = await categoryService.getAllCategory();
+    setCategories(res?.data);
   };
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const HomePage = () => {
   }, [searchProduct]);
 
   useEffect(() => {
-    fetchTypeProduct();
+    fetchCategories();
   }, []);
 
   const { data, error, isLoading } = useQuery({
@@ -48,8 +49,8 @@ const HomePage = () => {
     <>
       <div style={{ padding: "60px 120px 0" }}>
         <WrapperTypeProduct>
-          {typeProduct.map((item) => {
-            return <TypeProduct name={item} key={item} />;
+          {categories.map((item) => {
+            return <TypeProduct name={item.name} slug={item.slug} key={item._id} />;
           })}
         </WrapperTypeProduct>
       </div>
