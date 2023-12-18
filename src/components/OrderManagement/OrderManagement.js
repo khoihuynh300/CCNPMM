@@ -127,31 +127,31 @@ const OrderManagement = () => {
       ...getColumnSearchProps("_id"),
     },
     {
-      title: "Username",
+      title: "Tên người dùng",
       dataIndex: "userName",
       ...getColumnSearchProps("username"),
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
       ...getColumnSearchProps("phone"),
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
       ...getColumnSearchProps("address"),
     },
     {
-      title: "Total price",
+      title: "Tổng tiền",
       dataIndex: "totalPrice",
       sorter: (a, b) => a.totalPrice.length - b.totalPrice.length,
     },
     {
-      title: "Created  At",
+      title: "Ngày đặt",
       dataIndex: "createdAt",
     },
     {
-      title: "Status",
+      title: "Trạng thái",
       dataIndex: "status",
       filters: [
         { text: "Chưa xác nhận", value: "Chưa xác nhận" },
@@ -351,7 +351,7 @@ const OrderManagement = () => {
               disabled
             />
           </Form.Item>
-          <Form.Item label="Username" name="username">
+          <Form.Item label="Tên người dùng" name="username">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={stateOrder.username}
@@ -359,7 +359,7 @@ const OrderManagement = () => {
               disabled
             />
           </Form.Item>
-          <Form.Item label="Phone" name="phone">
+          <Form.Item label="Số điện thoại" name="phone">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={stateOrder.phone}
@@ -367,7 +367,7 @@ const OrderManagement = () => {
               disabled
             />
           </Form.Item>
-          <Form.Item label="Address" name="address">
+          <Form.Item label="Địa chỉ" name="address">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={stateOrder.address}
@@ -376,7 +376,7 @@ const OrderManagement = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Created at" name="createdAt">
+          <Form.Item label="Ngày đặt" name="createdAt">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={formatDateTime(stateOrder.createdAt)}
@@ -385,7 +385,7 @@ const OrderManagement = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Updated at" name="updatedAt">
+          <Form.Item label="Cập nhật vào" name="updatedAt">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={formatDateTime(stateOrder.updatedAt)}
@@ -400,7 +400,7 @@ const OrderManagement = () => {
             })}
           </div>
 
-          <Form.Item label="TotalPrice" name="totalPrice">
+          <Form.Item label="Tổng tiền" name="totalPrice">
             <InputComponent
               style={{ background: "white", color: "#333", border: "0px" }}
               value={stateOrder.totalPrice}
@@ -409,7 +409,7 @@ const OrderManagement = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Status" name="status">
+          <Form.Item label="Trạng thái" name="status">
             <Select
               name="status"
               value={stateOrder.status}

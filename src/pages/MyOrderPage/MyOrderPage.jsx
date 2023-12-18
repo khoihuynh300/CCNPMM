@@ -134,7 +134,7 @@ const MyOrderPage = () => {
                       {convertPrice(order?.totalPrice)}
                     </span>
                   </div>
-                  <div style={{ display: "flex", gap: "10px" }}>
+                  {(order.status === "Chưa xác nhận" || order.status === "Đã xác nhận") && <div style={{ display: "flex", gap: "10px" }}>
                     <ButtonComponent
                       onClick={() => handleCancleOrder(order)}
                       size={40}
@@ -146,7 +146,7 @@ const MyOrderPage = () => {
                     >
                       <div style={{ color: "#1a94ff", fontSize: "18px" }}>Hủy đơn hàng</div>
                     </ButtonComponent>
-                  </div>
+                  </div>}
                 </WrapperFooterItem>
               </WrapperItemOrder>
             );

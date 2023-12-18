@@ -203,7 +203,7 @@ const CategoryManagement = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên danh mục",
       dataIndex: "name",
       ...getColumnSearchProps("name"),
     },
@@ -351,7 +351,7 @@ const CategoryManagement = () => {
           form={createCategoryForm}
         >
           <Form.Item
-            label="Name"
+            label="Tên danh mục"
             name="name"
             rules={[{ required: true, message: "Nhập tên danh mục" }]}
           >
@@ -382,7 +382,7 @@ const CategoryManagement = () => {
           form={updateCategoryForm}
         >
           <Form.Item
-            label="Name"
+            label="Tên danh mục"
             name="name"
             rules={[{ required: true, message: "Nhập tên danh mục" }]}
           >

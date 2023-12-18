@@ -263,23 +263,23 @@ const ProductManagement = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên sản phẩm",
       dataIndex: "name",
       ...getColumnSearchProps("name"),
     },
     {
-      title: "Price",
+      title: "Giá",
       dataIndex: "price",
       render: (text) => `${text.toLocaleString()}đ`,
       sorter: (a, b) => a.price - b.price,
     },
     {
-      title: "Count inStock",
+      title: "Còn lại",
       dataIndex: "countInStock",
       sorter: (a, b) => a.countInStock - b.countInStock,
     },
     {
-      title: "Category",
+      title: "Danh mục",
       dataIndex: "category",
       filters: renderCategoryFilter(),
       onFilter: (value, record) => record.category === value,
@@ -467,7 +467,7 @@ const ProductManagement = () => {
           form={createProductForm}
         >
           <Form.Item
-            label="Name"
+            label="Tên sản phẩm"
             name="name"
             rules={[{ required: true, message: "Nhập tên sản phẩm" }]}
           >
@@ -516,7 +516,7 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Count inStock"
+            label="còn lại"
             name="countInStock"
             rules={[{ required: true, message: "Nhập số lượng trong kho" }]}
           >
@@ -526,10 +526,10 @@ const ProductManagement = () => {
               name="countInStock"
             />
           </Form.Item>
-          <Form.Item label="Price" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
+          <Form.Item label="Giá" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
             <InputComponent value={stateProduct.price} onChange={handleOnchange} name="price" />
           </Form.Item>
-          <Form.Item label="Description" name="description">
+          <Form.Item label="Mô tả" name="description">
             <InputComponent
               value={stateProduct.description}
               onChange={handleOnchange}
@@ -537,7 +537,7 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Discount (%)"
+            label="Giảm giá (%)"
             name="discount"
             rules={[
               { required: true, message: "Nhập giảm giá" },
@@ -559,7 +559,7 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Image"
+            label="Ảnh"
             name="image"
             rules={[{ required: true, message: "Chọn hình ảnh cho sản phẩm" }]}
           >
@@ -610,7 +610,7 @@ const ProductManagement = () => {
           form={updateProductForm}
         >
           <Form.Item
-            label="Name"
+            label="Tên sản phẩm"
             name="name"
             rules={[{ required: true, message: "Nhập tên sản phẩm" }]}
           >
@@ -622,7 +622,7 @@ const ProductManagement = () => {
           </Form.Item>
 
           <Form.Item
-            label="Category"
+            label="Danh mục"
             name="category"
             rules={[{ required: true, message: "Nhập danh mục sản phẩm" }]}
           >
@@ -664,7 +664,7 @@ const ProductManagement = () => {
           </Form.Item>
 
           <Form.Item
-            label="Count inStock"
+            label="Còn lại"
             name="countInStock"
             rules={[{ required: true, message: "Nhập số lượng trong kho" }]}
           >
@@ -674,14 +674,14 @@ const ProductManagement = () => {
               name="countInStock"
             />
           </Form.Item>
-          <Form.Item label="Price" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
+          <Form.Item label="Giá" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
             <InputComponent
               value={stateProductDetails.price}
               onChange={handleOnchangeDetails}
               name="price"
             />
           </Form.Item>
-          <Form.Item label="Description" name="description">
+          <Form.Item label="Mô tả" name="description">
             <InputComponent
               value={stateProductDetails.description}
               onChange={handleOnchangeDetails}
@@ -701,7 +701,7 @@ const ProductManagement = () => {
             />
           </Form.Item> */}
           <Form.Item
-            label="Discount (%)"
+            label="Giảm giá (%)"
             name="discount"
             rules={[
               { required: true, message: "Nhập giảm giá" },
@@ -723,7 +723,7 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Image"
+            label="Ảnh"
             name="image"
             rules={[{ required: true, message: "Chọn hình ảnh cho sản phẩm" }]}
           >

@@ -189,7 +189,7 @@ const UserManagement = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Tên",
       dataIndex: "name",
       ...getColumnSearchProps("name"),
     },
@@ -199,7 +199,7 @@ const UserManagement = () => {
       ...getColumnSearchProps("email"),
     },
     {
-      title: "Address",
+      title: "Địa chỉ",
       dataIndex: "address",
       ...getColumnSearchProps("address"),
     },
@@ -219,7 +219,7 @@ const UserManagement = () => {
       onFilter: (value, record) => record.isAdmin === value,
     },
     {
-      title: "Phone",
+      title: "Số điện thoại",
       dataIndex: "phone",
       ...getColumnSearchProps("phone"),
     },
@@ -327,7 +327,7 @@ const UserManagement = () => {
           autoComplete="on"
           form={updateUserForm}
         >
-          <Form.Item label="Name" name="name">
+          <Form.Item label="Tên" name="name">
             <InputComponent
               value={stateUserDetails.name}
               onChange={handleOnchangeDetails}

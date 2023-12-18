@@ -16,6 +16,7 @@ import { updateUser } from "../../redux/slices/userSlice";
 import * as userService from "../../services/userService";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import { getBase64 } from "../../utils";
+import {checkVietNamPhoneNumber} from '../../utils'
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
@@ -78,6 +79,10 @@ const ProfilePage = () => {
   };
 
   const handleUpdate = () => {
+    if(!checkVietNamPhoneNumber(phone)){
+      message.error("Số điện thoại không hợp lệ!")
+      return
+    }
     mutation.mutate({
       id: user?.id,
       email,
@@ -93,82 +98,34 @@ const ProfilePage = () => {
       <WrapperHeader>Thông tin người dùng</WrapperHeader>
       <WrapperContentProfile>
         <WrapperInput>
-          <WrapperLabel htmlFor="name">Name</WrapperLabel>
+          <WrapperLabel htmlFor="name">Tên</WrapperLabel>
           <InputForm
-            style={{ width: "300px" }}
+            style={{ width: "100%" }}
             id="name"
             value={name}
             onChange={handleOnchangeName}
           />
-          <ButtonComponent
-            onClick={handleUpdate}
-            size={40}
-            style={{
-              height: "30px",
-              width: "fit-content",
-              borderRadius: "4px",
-              padding: "2px 6px 6px",
-              color: "rgb(26, 148, 255)",
-              fontSize: "15px",
-              fontWeight: "700",
-              border: "2px solid rgb(26, 148, 255)",
-            }}
-          >
-            Cập nhật
-          </ButtonComponent>
         </WrapperInput>
         <WrapperInput>
           <WrapperLabel htmlFor="email">Email</WrapperLabel>
           <InputForm
-            style={{ width: "300px" }}
+            style={{ width: "100%" }}
             id="email"
             value={email}
             onChange={handleOnchangeEmail}
           />
-          <ButtonComponent
-            onClick={handleUpdate}
-            size={40}
-            style={{
-              height: "30px",
-              width: "fit-content",
-              borderRadius: "4px",
-              padding: "2px 6px 6px",
-              color: "rgb(26, 148, 255)",
-              fontSize: "15px",
-              fontWeight: "700",
-              border: "2px solid rgb(26, 148, 255)",
-            }}
-          >
-            Cập nhật
-          </ButtonComponent>
         </WrapperInput>
         <WrapperInput>
-          <WrapperLabel htmlFor="phone">Phone</WrapperLabel>
+          <WrapperLabel htmlFor="phone">Số điện thoại</WrapperLabel>
           <InputForm
-            style={{ width: "300px" }}
+            style={{ width: "100%" }}
             id="phone"
             value={phone}
             onChange={handleOnchangePhone}
           />
-          <ButtonComponent
-            onClick={handleUpdate}
-            size={40}
-            style={{
-              height: "30px",
-              width: "fit-content",
-              borderRadius: "4px",
-              padding: "2px 6px 6px",
-              color: "rgb(26, 148, 255)",
-              fontSize: "15px",
-              fontWeight: "700",
-              border: "2px solid rgb(26, 148, 255)",
-            }}
-          >
-            Cập nhật
-          </ButtonComponent>
         </WrapperInput>
         <WrapperInput>
-          <WrapperLabel htmlFor="avatar">Avatar</WrapperLabel>
+          <WrapperLabel htmlFor="avatar">Ảnh đại diện</WrapperLabel>
           <WrapperUploadFile
             beforeUpload={() => {
               return false;
@@ -190,31 +147,17 @@ const ProfilePage = () => {
               alt="avatar"
             />
           )}
-          <ButtonComponent
-            onClick={handleUpdate}
-            size={40}
-            style={{
-              height: "30px",
-              width: "fit-content",
-              borderRadius: "4px",
-              padding: "2px 6px 6px",
-              color: "rgb(26, 148, 255)",
-              fontSize: "15px",
-              fontWeight: "700",
-              border: "2px solid rgb(26, 148, 255)",
-            }}
-          >
-            Cập nhật
-          </ButtonComponent>
         </WrapperInput>
         <WrapperInput>
-          <WrapperLabel htmlFor="address">Address</WrapperLabel>
+          <WrapperLabel htmlFor="address">Địa chỉ</WrapperLabel>
           <InputForm
-            style={{ width: "300px" }}
+            style={{ width: "100%" }}
             id="address"
             value={address}
             onChange={handleOnchangeAddress}
           />
+        </WrapperInput>
+        <div style={{ display: "flex", justifyContent: "end" }}>
           <ButtonComponent
             onClick={handleUpdate}
             size={40}
@@ -227,11 +170,12 @@ const ProfilePage = () => {
               fontSize: "15px",
               fontWeight: "700",
               border: "2px solid rgb(26, 148, 255)",
+              
             }}
           >
             Cập nhật
           </ButtonComponent>
-        </WrapperInput>
+        </div>
       </WrapperContentProfile>
     </div>
   );

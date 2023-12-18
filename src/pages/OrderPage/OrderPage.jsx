@@ -230,7 +230,7 @@ const OrderPage = () => {
       style={{
         background: "#f5f5fa",
         with: "100%",
-        height: "100vh",
+        minHeight: "100vh",
         paddingTop: "60px",
         fontSize: "18px",
       }}
