@@ -40,6 +40,8 @@ const HeaderComponent = ({ isAdmin = false }) => {
   };
 
   const handleNavigateHome = () => {
+    setSearch("");
+    dispatch(searchProduct(""));
     navigate("/");
   };
 
@@ -85,6 +87,7 @@ const HeaderComponent = ({ isAdmin = false }) => {
         </Col>
         <Col span={12} style={{ visibility: isAdmin && "hidden" }}>
           <ButtonInputSearch
+            inputValue={search}
             size="large"
             placeholder="Search"
             textButton="Tìm kiếm"

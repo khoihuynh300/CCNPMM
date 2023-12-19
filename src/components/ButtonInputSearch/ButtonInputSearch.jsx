@@ -5,6 +5,7 @@ import ButtonComponent from "../ButtonComponent/ButtonComponent";
 
 const ButtonInputSearch = (props) => {
   const {
+    inputValue = "",
     size,
     placeholder,
     textButton,
@@ -20,6 +21,7 @@ const ButtonInputSearch = (props) => {
   return (
     <div style={{ display: "flex", borderRadius:"5px", overflow:"hidden" }}>
       <InputComponent
+        value={inputValue}
         size={size}
         placeholder={placeholder}
         bordered={bordered}

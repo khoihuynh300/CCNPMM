@@ -5,7 +5,7 @@ import { WrapperButtonHover, WrapperTypeProduct } from "./style";
 import CardComponent from "../../components/CardComponent/CardComponent";
 import * as productService from "../../services/productService";
 import * as categoryService from "../../services/categoryService";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const HomePage = () => {
@@ -34,12 +34,12 @@ const HomePage = () => {
     fetchCategories();
   }, []);
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProduct,
-    retry: 3,
-    retryDelay: 1000,
-  });
+  // const { data, error, isLoading } = useQuery({
+  //   queryKey: ["products"],
+  //   queryFn: fetchProduct,
+  //   retry: 3,
+  //   retryDelay: 1000,
+  // });
 
   const handleNavigateProductDetail = (id) => {
     navigate(`/product-detail/${id}`);
