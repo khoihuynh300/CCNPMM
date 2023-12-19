@@ -109,10 +109,11 @@ const ProfilePage = () => {
         <WrapperInput>
           <WrapperLabel htmlFor="email">Email</WrapperLabel>
           <InputForm
-            style={{ width: "100%" }}
+            style={{ width: "100%", background:"#fff", color:"#333" }}
             id="email"
             value={email}
             onChange={handleOnchangeEmail}
+            disabled
           />
         </WrapperInput>
         <WrapperInput>

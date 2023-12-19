@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addOrderProduct } from "../../redux/slices/orderSlice";
-import { convertPrice } from "../../utils";
+import { checkVietNamPhoneNumber, convertPrice } from "../../utils";
 import { useMutationHooks } from "../../hooks/useMutationHooks";
 import * as orderService from "../../services/OrderService";
 import * as userService from "../../services/userService";
@@ -68,7 +68,7 @@ const ProductDetailComponent = ({ productId }) => {
         { id: user?.id, token: user?.access_token, ...stateUserDetails },
         {
           onSuccess: () => {
-            dispatch(updateUser({ name, address, phone }));
+            dispatch(updateUser({ ...user, _id: user?.id, name, address, phone }));
             setIsOpenModalUpdateInfo(false);
           },
         }
@@ -483,15 +483,15 @@ const ProductDetailComponent = ({ productId }) => {
           >
             <Form
               name="basic"
-              labelCol={{ span: 4 }}
-              wrapperCol={{ span: 20 }}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 18 }}
               autoComplete="on"
               form={form}
             >
               <Form.Item
-                label="Name"
+                label="Tên"
                 name="name"
-                rules={[{ required: true, message: "Please input your name!" }]}
+                rules={[{ required: true, message: "Nhập tên của bạn!" }]}
               >
                 <InputComponent
                   value={stateUserDetails["name"]}
@@ -500,9 +500,20 @@ const ProductDetailComponent = ({ productId }) => {
                 />
               </Form.Item>
               <Form.Item
-                label="Phone"
+                label="Số điện thoại"
                 name="phone"
-                rules={[{ required: true, message: "Please input your  phone!" }]}
+                rules={[
+                  { required: true, message: "Nhập số điện thoại!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      const phone = getFieldValue("phone");
+                      if (!checkVietNamPhoneNumber(phone)) {
+                        return Promise.reject("Số điện thoại không hợp lệ!");
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
+                ]}
               >
                 <InputComponent
                   value={stateUserDetails.phone}
@@ -512,9 +523,9 @@ const ProductDetailComponent = ({ productId }) => {
               </Form.Item>
 
               <Form.Item
-                label="Adress"
+                label="Địa chỉ"
                 name="address"
-                rules={[{ required: true, message: "Please input your  address!" }]}
+                rules={[{ required: true, message: "Nhập địa chỉ!" }]}
               >
                 <InputComponent
                   value={stateUserDetails.address}

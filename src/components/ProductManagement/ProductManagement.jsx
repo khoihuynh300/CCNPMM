@@ -251,12 +251,15 @@ const ProductManagement = () => {
   });
 
   const renderCategoryFilter = () => {
-    let filter = []
-    categories?.data?.data?.forEach(category => {
-      filter = [...filter, {
-        text: category.name,
-        value: category.name,
-      }]
+    let filter = [];
+    categories?.data?.data?.forEach((category) => {
+      filter = [
+        ...filter,
+        {
+          text: category.name,
+          value: category.name,
+        },
+      ];
     });
     return filter;
   };
@@ -317,6 +320,7 @@ const ProductManagement = () => {
     mutationCategory.mutate(stateCategoryName, {
       onSettled: () => {
         categories.refetch();
+        setStateCategoryName("");
       },
     });
   };
@@ -417,7 +421,7 @@ const ProductManagement = () => {
   };
 
   const filterOptionCategory = (input, option) =>
-  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <div>
@@ -516,9 +520,20 @@ const ProductManagement = () => {
             />
           </Form.Item>
           <Form.Item
-            label="còn lại"
+            label="Lượng tồn kho"
             name="countInStock"
-            rules={[{ required: true, message: "Nhập số lượng trong kho" }]}
+            rules={[
+              { required: true, message: "Nhập số lượng tồn kho" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const countInStock = getFieldValue("countInStock");
+                  if (!isNumeric(countInStock) || countInStock <= 0) {
+                    return Promise.reject("Số lượng tồn kho phải là số > 0");
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
           >
             <InputComponent
               value={stateProduct.countInStock}
@@ -526,7 +541,22 @@ const ProductManagement = () => {
               name="countInStock"
             />
           </Form.Item>
-          <Form.Item label="Giá" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
+          <Form.Item
+            label="Giá"
+            name="price"
+            rules={[
+              { required: true, message: "Nhập giá" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const price = getFieldValue("price");
+                  if (!isNumeric(price) || price < 0) {
+                    return Promise.reject("Giá sản phẩm phải là số và > 0");
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
             <InputComponent value={stateProduct.price} onChange={handleOnchange} name="price" />
           </Form.Item>
           <Form.Item label="Mô tả" name="description">
@@ -545,7 +575,7 @@ const ProductManagement = () => {
                 validator(_, value) {
                   const discount = getFieldValue("discount");
                   if (!isNumeric(discount) || discount < 0 || discount > 99) {
-                    return Promise.reject("discount must be in range 0 to 99");
+                    return Promise.reject("Giảm giá phải từ 0 đến 99");
                   }
                   return Promise.resolve();
                 },
@@ -664,9 +694,19 @@ const ProductManagement = () => {
           </Form.Item>
 
           <Form.Item
-            label="Còn lại"
+            label="Lượng tồn kho"
             name="countInStock"
-            rules={[{ required: true, message: "Nhập số lượng trong kho" }]}
+            rules={[{ required: true, message: "Nhập số lượng tồn kho" }, 
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                const countInStock = getFieldValue("countInStock");
+                if (!isNumeric(countInStock) || countInStock <= 0) {
+                  return Promise.reject("Số lượng tồn kho phải là số > 0");
+                }
+                return Promise.resolve();
+              },
+            }),
+          ]}
           >
             <InputComponent
               value={stateProductDetails.countInStock}
@@ -674,7 +714,22 @@ const ProductManagement = () => {
               name="countInStock"
             />
           </Form.Item>
-          <Form.Item label="Giá" name="price" rules={[{ required: true, message: "Nhập giá" }]}>
+          <Form.Item
+            label="Giá"
+            name="price"
+            rules={[
+              { required: true, message: "Nhập giá" },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  const price = getFieldValue("price");
+                  if (!isNumeric(price) || price < 0) {
+                    return Promise.reject("Giá sản phẩm phải là số và > 0");
+                  }
+                  return Promise.resolve();
+                },
+              }),
+            ]}
+          >
             <InputComponent
               value={stateProductDetails.price}
               onChange={handleOnchangeDetails}
@@ -709,7 +764,7 @@ const ProductManagement = () => {
                 validator(_, value) {
                   const discount = getFieldValue("discount");
                   if (!isNumeric(discount) || discount < 0 || discount > 99) {
-                    return Promise.reject("discount must be in range 0 to 99");
+                    return Promise.reject("Giảm giá phải từ 0 đến 99");
                   }
                   return Promise.resolve();
                 },

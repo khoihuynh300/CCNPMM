@@ -3,7 +3,7 @@ import React from "react";
 import { WrapperInputStyle } from "./style";
 
 const InputForm = (props) => {
-  const { placeholder = "Nhập text", style, type, value, onChange } = props;
+  const { placeholder = "Nhập text", style, type, value, onChange, disabled=false } = props;
   return (
     <WrapperInputStyle
       style={style}
@@ -11,6 +11,7 @@ const InputForm = (props) => {
       value={value}
       type={type}
       onChange={onChange}
+      disabled = {disabled}
     />
   );
 };
